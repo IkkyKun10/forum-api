@@ -3,7 +3,7 @@ const AddThread = require('../AddThread')
 describe('a Thread entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
-      title: 'Gojo Satoru',
+      title: 'Gojo Satoru'
     }
 
     expect(() => new AddThread(payload)).toThrowError('ADD_THREAD.NOT_CONTAIN_NEEDED_PROPERTY')
@@ -13,7 +13,7 @@ describe('a Thread entities', () => {
     const payload = {
       title: 'Gojo Satoru',
       body: Infinity,
-      owner: 'owner-123',
+      owner: 'owner-123'
     }
 
     expect(() => new AddThread(payload)).toThrowError('ADD_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION')
@@ -23,7 +23,7 @@ describe('a Thread entities', () => {
     const payload = {
       title: 'Gojo Satoru',
       body: 'Kill by Sukuna',
-      owner: 'owner-123',
+      owner: 'owner-123'
     }
 
     const { title, body, owner } = new AddThread(payload)

@@ -19,7 +19,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const query = {
       text: 'INSERT INTO comments VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id, content, owner',
-      values: [id, threadId, username, date, content, isDeleted, owner],
+      values: [id, threadId, username, date, content, isDeleted, owner]
     }
 
     const result = await this._pool.query(query)
@@ -30,7 +30,7 @@ class CommentRepositoryPostgres extends CommentRepository {
   async verifyComment ({ commentId, owner }) {
     const query = {
       text: 'SELECT * FROM comments WHERE id = $1 AND owner = $2',
-      values: [commentId, owner],
+      values: [commentId, owner]
     }
 
     const result = await this._pool.query(query)
@@ -42,7 +42,7 @@ class CommentRepositoryPostgres extends CommentRepository {
   async findCommentById (commentId) {
     const query = {
       text: 'SELECT * FROM comments WHERE id = $1',
-      values: [commentId],
+      values: [commentId]
     }
 
     const result = await this._pool.query(query)
@@ -56,7 +56,7 @@ class CommentRepositoryPostgres extends CommentRepository {
       text: `SELECT c.id, c.content, c.date, u.username, c.is_deleted FROM comments c INNER JOIN users u
               ON c.owner = u.id WHERE c.thread_id = $1
               ORDER BY c.date ASC`,
-      values: [threadId],
+      values: [threadId]
     }
 
     const result = await this._pool.query(query)
@@ -66,7 +66,7 @@ class CommentRepositoryPostgres extends CommentRepository {
   async deleteComment (commentId) {
     const query = {
       text: 'UPDATE comments set is_deleted = true WHERE id = $1 RETURNING id',
-      values: [commentId],
+      values: [commentId]
     }
 
     const result = await this._pool.query(query)

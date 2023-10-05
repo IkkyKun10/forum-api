@@ -7,10 +7,10 @@ const AddCommentUseCase = require('../AddCommentUseCase')
 describe('AddCommentUseCase', () => {
   it('should orchestrate the add comment action correctly', async () => {
     const addCommentPayload = {
-      content: 'content-test',
+      content: 'content-test'
     }
     const addCommentParams = {
-      threadId: 'thread-123',
+      threadId: 'thread-123'
     }
     const owner = 'user-123'
     const username = 'testing'
@@ -19,13 +19,13 @@ describe('AddCommentUseCase', () => {
       content: addCommentPayload.content,
       threadId: addCommentParams.threadId,
       owner,
-      username,
+      username
     })
 
     const expectedAddedComment = new AddedComment({
       id: 'comment-123',
       owner: 'user-123',
-      content: 'content-test',
+      content: 'content-test'
     })
 
     const mockThreadRepository = new ThreadRepository()
@@ -36,20 +36,20 @@ describe('AddCommentUseCase', () => {
       new AddedComment({
         id: 'comment-123',
         content: 'content-test',
-        owner: 'user-123',
+        owner: 'user-123'
       })
     ))
 
     const dummyCommentUseCase = new AddCommentUseCase({
       threadRepository: mockThreadRepository,
-      commentRepository: mockCommentRepository,
+      commentRepository: mockCommentRepository
     })
 
     const addedComment = await dummyCommentUseCase.addComment({
       content: addCommentPayload.content,
       threadId: addCommentParams.threadId,
       owner,
-      username,
+      username
     })
 
     expect(addedComment).toStrictEqual(expectedAddedComment)

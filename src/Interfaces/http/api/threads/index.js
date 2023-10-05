@@ -7,5 +7,5 @@ module.exports = {
   register: async (server, { container }) => {
     const threadHandler = new ThreadsHandler(container)
     server.route(routes(threadHandler))
-  },
+  }
 }

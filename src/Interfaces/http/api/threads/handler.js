@@ -34,7 +34,7 @@ class ThreadsHandler {
     const response = h.response({
       status: 'success',
       data: {
-        thread,
+        thread
       }
     })
 

@@ -12,14 +12,14 @@ describe('CommentRepositoryPostgres', () => {
       id: 'user-123',
       username: 'new user',
       password: 'secret',
-      fullname: 'new user here',
+      fullname: 'new user here'
     })
     await ThreadsTableTestHelper.addThread({
       id: 'thread-123',
       title: 'Gojo satoru',
       body: 'Akan bangkit kembali sebagai objek kutukan',
       owner: 'user-123',
-      date: '2023',
+      date: '2023'
     })
   })
 
@@ -39,13 +39,13 @@ describe('CommentRepositoryPostgres', () => {
         content: 'content-test',
         username: 'new user',
         threadId: 'thread-123',
-        owner: 'user-123',
+        owner: 'user-123'
       })
 
       const expectedAddedComment = new AddedComment({
         id: 'comment-123',
         content: 'content-test',
-        owner: 'user-123',
+        owner: 'user-123'
       })
 
       const fakeIdGenerator = () => '123' // stub!
@@ -74,12 +74,20 @@ describe('CommentRepositoryPostgres', () => {
         date: '2023',
         content: 'new content',
         isDelete: false,
-        owner: 'user-123',
+        owner: 'user-123'
       })
     })
 
     afterEach(async () => {
       await CommentsTableTestHelper.cleanTable()
+    })
+
+    it('should throw NotFoundError when comment not found', async () => {
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
+
+      await expect(
+        commentRepositoryPostgres.findCommentById('comment-999999')
+      ).rejects.toThrowError('Comment Not Found')
     })
 
     it('should resolve if comment exists', async () => {
@@ -92,14 +100,6 @@ describe('CommentRepositoryPostgres', () => {
         commentRepositoryPostgres.findCommentById('comment-321')
       ).resolves.not.toThrowError()
     })
-
-    it('should throw NotFoundError when comment not found', async () => {
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
-
-      await expect(
-        commentRepositoryPostgres.findCommentById('comment-999999')
-      ).rejects.toThrowError('Comment Not Found')
-    })
   })
 
   describe('verifyComment function', () => {
@@ -108,7 +108,7 @@ describe('CommentRepositoryPostgres', () => {
         id: 'user-321',
         username: 'new user again',
         password: 'secret',
-        fullname: 'super fullname',
+        fullname: 'super fullname'
       })
       await CommentsTableTestHelper.addComment({
         id: 'comment-444',
@@ -117,7 +117,7 @@ describe('CommentRepositoryPostgres', () => {
         date: '2023',
         content: 'new content',
         isDelete: false,
-        owner: 'user-321',
+        owner: 'user-321'
       })
     })
 
@@ -130,7 +130,7 @@ describe('CommentRepositoryPostgres', () => {
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
       const isCommentAuthorized = commentRepositoryPostgres.verifyComment({
         commentId: 'comment-444',
-        owner: 'user-123',
+        owner: 'user-123'
       })
 
       await expect(isCommentAuthorized).rejects.toThrowError(
@@ -142,7 +142,7 @@ describe('CommentRepositoryPostgres', () => {
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
       const isCommentAuthorized = commentRepositoryPostgres.verifyComment({
         commentId: 'comment-444',
-        owner: 'user-321',
+        owner: 'user-321'
       })
 
       await expect(isCommentAuthorized).resolves.not.toThrowError()
@@ -159,7 +159,7 @@ describe('CommentRepositoryPostgres', () => {
         date: '2023',
         content: 'new content',
         isDelete: false,
-        owner: 'user-123',
+        owner: 'user-123'
       })
       await CommentsTableTestHelper.addComment({
         id: 'comment-888',
@@ -168,7 +168,7 @@ describe('CommentRepositoryPostgres', () => {
         date: '2023',
         content: 'new content super',
         isDelete: false,
-        owner: 'user-123',
+        owner: 'user-123'
       })
 
       const expectedDetailComment = [
@@ -177,15 +177,15 @@ describe('CommentRepositoryPostgres', () => {
           username: 'new user',
           date: '2023',
           content: 'new content',
-          is_deleted: false,
+          is_deleted: false
         },
         {
           id: 'comment-888',
           username: 'new user',
           date: '2023',
           content: 'new content super',
-          is_deleted: false,
-        },
+          is_deleted: false
+        }
       ]
       const detailComment = await commentRepositoryPostgres.getAllCommentInThread('thread-123')
 
@@ -229,7 +229,7 @@ describe('CommentRepositoryPostgres', () => {
         date: '2023',
         content: 'new content',
         isDelete: false,
-        owner: 'user-123',
+        owner: 'user-123'
       })
     })
 

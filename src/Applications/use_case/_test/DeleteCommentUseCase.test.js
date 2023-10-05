@@ -6,7 +6,7 @@ describe('DeleteCommentUseCase', () => {
   it('should orchestrate the delete comment use case properly', async () => {
     const payload = {
       threadId: 'thread-12345',
-      commentId: 'comment-12345',
+      commentId: 'comment-12345'
     }
 
     const owner = 'user-123'
@@ -25,12 +25,12 @@ describe('DeleteCommentUseCase', () => {
 
     const removeCommentUseCase = new DeleteCommentUseCase({
       threadRepository: mockThreadRepository,
-      commentRepository: mockCommentRepository,
+      commentRepository: mockCommentRepository
     })
 
     const deletePayload = {
       ...payload,
-      owner,
+      owner
     }
 
     await removeCommentUseCase.deleteCommentById(deletePayload)
@@ -38,7 +38,7 @@ describe('DeleteCommentUseCase', () => {
     expect(mockCommentRepository.findCommentById).toBeCalledWith(payload.commentId)
     expect(mockCommentRepository.verifyComment).toBeCalledWith({
       commentId: payload.commentId,
-      owner,
+      owner
     })
     expect(mockCommentRepository.deleteComment).toBeCalledWith(expectedDeletedComment.id)
   })

@@ -32,10 +32,8 @@ const GetDetailThreadUseCase = require('../Applications/use_case/GetDetailThread
 const AddCommentUseCase = require('../Applications/use_case/AddCommentUseCase')
 const DeleteCommentUseCase = require('../Applications/use_case/DeleteCommentUseCase')
 
-// creating container
 const container = createContainer()
 
-// registering services and repository
 container.register([
   {
     key: UserRepository.name,
@@ -90,10 +88,10 @@ container.register([
     parameter: {
       dependencies: [
         {
-          concrete: pool,
+          concrete: pool
         },
         {
-          concrete: nanoid,
+          concrete: nanoid
         }
       ]
     }
@@ -104,17 +102,16 @@ container.register([
     parameter: {
       dependencies: [
         {
-          concrete: pool,
+          concrete: pool
         },
         {
-          concrete: nanoid,
-        },
-      ],
-    },
-  },
+          concrete: nanoid
+        }
+      ]
+    }
+  }
 ])
 
-// registering use cases
 container.register([
   {
     key: AddUserUseCase.name,
@@ -196,7 +193,7 @@ container.register([
       dependencies: [
         {
           name: 'threadRepository',
-          internal: ThreadRepository.name,
+          internal: ThreadRepository.name
         }
       ]
     }
@@ -209,14 +206,14 @@ container.register([
       dependencies: [
         {
           name: 'threadRepository',
-          internal: ThreadRepository.name,
+          internal: ThreadRepository.name
         },
         {
           name: 'commentRepository',
-          internal: CommentRepository.name,
+          internal: CommentRepository.name
         }
-      ],
-    },
+      ]
+    }
   },
   {
     key: AddCommentUseCase.name,
@@ -226,14 +223,14 @@ container.register([
       dependencies: [
         {
           name: 'threadRepository',
-          internal: ThreadRepository.name,
+          internal: ThreadRepository.name
         },
         {
           name: 'commentRepository',
-          internal: CommentRepository.name,
+          internal: CommentRepository.name
         }
-      ],
-    },
+      ]
+    }
   },
   {
     key: DeleteCommentUseCase.name,
@@ -243,15 +240,15 @@ container.register([
       dependencies: [
         {
           name: 'threadRepository',
-          internal: ThreadRepository.name,
+          internal: ThreadRepository.name
         },
         {
           name: 'commentRepository',
-          internal: CommentRepository.name,
+          internal: CommentRepository.name
         }
-      ],
-    },
-  },
+      ]
+    }
+  }
 ])
 
 module.exports = container

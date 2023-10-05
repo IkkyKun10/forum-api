@@ -4,7 +4,7 @@ describe('a Thread entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
       id: 'id-123',
-      title: 'Gojo Satoru',
+      title: 'Gojo Satoru'
     }
 
     expect(() => new GetDetailThread(payload)).toThrowError('GET_DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY')
@@ -17,7 +17,7 @@ describe('a Thread entities', () => {
       body: 12345,
       date: '2023-09-22',
       username: 'Gojokun',
-      comments: [],
+      comments: []
     }
 
     expect(() => new GetDetailThread(payload)).toThrowError('GET_DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION')

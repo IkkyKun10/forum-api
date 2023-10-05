@@ -17,10 +17,10 @@ class GetDetailComment {
     }
 
     if (
-      typeof id !== 'string'
-      || typeof date !== 'string'
-      || typeof username !== 'string'
-      || typeof content !== 'string'
+      typeof id !== 'string' ||
+      typeof date !== 'string' ||
+      typeof username !== 'string' ||
+      typeof content !== 'string'
     ) {
       throw new Error('GET_DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }

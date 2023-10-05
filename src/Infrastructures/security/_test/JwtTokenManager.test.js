@@ -70,14 +70,11 @@ describe('JwtTokenManager', () => {
 
   describe('get bearer token', () => {
     it('should return token correctly from a header', async () => {
-      // arrange
       const jwtTokenManager = new JwtTokenManager(Jwt.token)
       const header = 'Bearer tokenNewtoken'
 
-      // action
       const token = await jwtTokenManager.getBearerToken(header)
 
-      // assert
       expect(token).toEqual('tokenNewtoken')
     })
 

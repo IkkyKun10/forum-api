@@ -3,7 +3,7 @@ const AddComment = require('../AddComment')
 describe('add Comment entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
-      threadId: 'thread-123',
+      threadId: 'thread-123'
     }
 
     expect(() => new AddComment(payload)).toThrowError(
@@ -13,10 +13,10 @@ describe('add Comment entities', () => {
 
   it('should throw error when payload did not meet data type specification', () => {
     const payload = {
-      content: 'content-test',
+      content: 'content',
       threadId: 'thread-123',
       owner: 'user-123',
-      username: 123,
+      username: 123
     }
 
     expect(() => new AddComment(payload)).toThrowError(
@@ -26,10 +26,10 @@ describe('add Comment entities', () => {
 
   it('should create Comment object correctly', () => {
     const payload = {
-      content: 'content-test',
+      content: 'content',
       threadId: 'thread-123',
       owner: 'user-123',
-      username: 'testing',
+      username: 'user_test'
     }
 
     const { content, threadId, owner, username } = new AddComment(payload)

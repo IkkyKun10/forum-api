@@ -1,7 +1,7 @@
-const AddThread = require('../../../Domains/threads/entities/AddThread');
-const AddedThread = require('../../../Domains/threads/entities/AddedThread');
-const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
-const AddThreadUseCase = require('../AddThreadUseCase');
+const AddThread = require('../../../Domains/threads/entities/AddThread')
+const AddedThread = require('../../../Domains/threads/entities/AddedThread')
+const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
+const AddThreadUseCase = require('../AddThreadUseCase')
 
 describe('AddThreadUseCase', () => {
   it('should orchestrate the add thread action correctly', async () => {
@@ -9,17 +9,17 @@ describe('AddThreadUseCase', () => {
     const useCasePayload = {
       id: 'thread-123',
       title: 'One piece',
-      body: 'Gear 5',
+      body: 'Gear 5'
     }
 
     const expectedAddThread = new AddThread({
       ...useCasePayload,
-      owner: userId,
+      owner: userId
     })
 
     const expectedAddedThread = new AddedThread({
       ...useCasePayload,
-      owner: userId,
+      owner: userId
     })
 
     const mockThreadRepository = new ThreadRepository()
@@ -28,17 +28,17 @@ describe('AddThreadUseCase', () => {
         id: 'thread-123',
         title: 'One piece',
         body: 'Gear 5',
-        owner: userId,
+        owner: userId
       })
     ))
 
     const dummyThreadUseCase = new AddThreadUseCase({
-      threadRepository: mockThreadRepository,
+      threadRepository: mockThreadRepository
     })
 
     const addedThread = await dummyThreadUseCase.addNewThread(
       useCasePayload,
-      userId,
+      userId
     )
 
     expect(addedThread).toStrictEqual(expectedAddedThread)

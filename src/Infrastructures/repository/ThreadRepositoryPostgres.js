@@ -30,7 +30,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
   async verifyThreadAvaibility (threadId) {
     const query = {
       text: 'SELECT * FROM threads where id = $1',
-      values: [threadId],
+      values: [threadId]
     }
 
     const result = await this._pool.query(query)
@@ -43,13 +43,13 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     const query = {
       text: `SELECT thr.id, thr.title, thr.body, thr.date, u.username FROM threads thr
               INNER JOIN users u ON thr.owner = u.id WHERE thr.id = $1`,
-      values: [threadId],
+      values: [threadId]
     }
 
     const result = await this._pool.query(query)
 
     if (!result.rowCount) {
-      throw new NotFoundError('thread tidak ditemukan');
+      throw new NotFoundError('thread tidak ditemukan')
     }
 
     return new GetDetailThread({

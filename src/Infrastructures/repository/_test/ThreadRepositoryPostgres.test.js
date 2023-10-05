@@ -32,7 +32,7 @@ describe('ThreadRepositoryPostgres', () => {
 
       const addNewThread = {
         ...addThreadPayload,
-        date: '2023',
+        date: '2023'
       }
 
       const fakeIdGen = () => '123'
@@ -47,7 +47,7 @@ describe('ThreadRepositoryPostgres', () => {
         id: 'thread-123',
         title: 'Gojo Satoru',
         body: 'Kill by sukuna',
-        owner: 'user-123',
+        owner: 'user-123'
       }))
     })
 
@@ -58,7 +58,7 @@ describe('ThreadRepositoryPostgres', () => {
           title: 'new title',
           body: 'my body',
           owner: 'user-123',
-          date: '2023',
+          date: '2023'
         })
       })
 
@@ -77,7 +77,7 @@ describe('ThreadRepositoryPostgres', () => {
           owner: 'user-123',
           date: '2023',
           username: 'Gojokun',
-          comments: [],
+          comments: []
         }))
       })
     })
@@ -97,18 +97,17 @@ describe('ThreadRepositoryPostgres', () => {
         await ThreadsTableTestHelper.cleanTable()
       })
 
-      it('should resolve if thread exists', async () => {
-        const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
-
-        await expect(threadRepositoryPostgres.verifyThreadAvaibility('thread-321')).resolves.toBeUndefined()
-
-      })
-
       it('should throw NotFoundError when thread not found', async () => {
         const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
 
         await expect(threadRepositoryPostgres.verifyThreadAvaibility('thread-not-found-123')).rejects
           .toThrowError('Thread not found')
+      })
+
+      it('should resolve if thread exists', async () => {
+        const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
+
+        await expect(threadRepositoryPostgres.verifyThreadAvaibility('thread-321')).resolves.toBeUndefined()
       })
     })
   })

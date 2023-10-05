@@ -14,9 +14,9 @@ const createServer = async (container) => {
     port: process.env.PORT,
     routes: {
       cors: {
-        origin: ['*'],
-      },
-    },
+        origin: ['*']
+      }
+    }
   })
 
   await server.register(Jwt)
@@ -26,15 +26,15 @@ const createServer = async (container) => {
       aud: false,
       iss: false,
       sub: false,
-      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE
     },
     validate: (artifacts) => ({
       isValid: true,
       credentials: {
         id: artifacts.decoded.payload.id,
-        username: artifacts.decoded.payload.username,
-      },
-    }),
+        username: artifacts.decoded.payload.username
+      }
+    })
   })
 
   await server.register([
@@ -53,7 +53,7 @@ const createServer = async (container) => {
     {
       plugin: comments,
       options: { container }
-    },
+    }
   ])
 
   server.ext('onPreResponse', (request, h) => {

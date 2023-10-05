@@ -10,9 +10,9 @@ let accessToken
 
 describe('/threads/{threadId}/comments endpoint', () => {
   beforeEach(async () => {
-    const loginPayload = {
+    const payloadLogin = {
       username: 'saya',
-      password: 'super_secret',
+      password: 'super_secret'
     }
 
     const server = await createServer(container)
@@ -23,14 +23,14 @@ describe('/threads/{threadId}/comments endpoint', () => {
       payload: {
         username: 'saya',
         password: 'super_secret',
-        fullname: 'saya saya',
-      },
+        fullname: 'saya saya'
+      }
     })
 
     const responseAuthentication = await server.inject({
       method: 'POST',
       url: '/authentications',
-      payload: loginPayload,
+      payload: payloadLogin
     })
 
     const responseJsonAuth = JSON.parse(responseAuthentication.payload)
@@ -41,11 +41,11 @@ describe('/threads/{threadId}/comments endpoint', () => {
       url: '/threads',
       payload: {
         title: 'new thread',
-        body: 'new body',
+        body: 'new body'
       },
       headers: {
-        authorization: `Bearer ${accessToken}`,
-      },
+        authorization: `Bearer ${accessToken}`
+      }
     })
 
     const responseThreadJson = JSON.parse(responseThread.payload)
@@ -63,26 +63,6 @@ describe('/threads/{threadId}/comments endpoint', () => {
   })
 
   describe('when POST /threads/{threadId}/comments', () => {
-    it('should response 201 and persisted add comment', async () => {
-      const server = await createServer(container)
-
-      const response = await server.inject({
-        method: 'POST',
-        url: `/threads/${threadId}/comments`,
-        payload: {
-          content: 'new content',
-        },
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        }
-      })
-
-      const responseJson = JSON.parse(response.payload)
-      expect(response.statusCode).toEqual(201)
-      expect(responseJson.status).toEqual('success')
-      expect(responseJson.data.addedComment).toBeDefined()
-    })
-
     it('should response 400 when request payload not contain needed property', async () => {
       const server = await createServer(container)
 
@@ -93,8 +73,8 @@ describe('/threads/{threadId}/comments endpoint', () => {
           body: 123
         },
         headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
+          authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)
@@ -115,8 +95,8 @@ describe('/threads/{threadId}/comments endpoint', () => {
           content: 123
         },
         headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
+          authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)
@@ -125,6 +105,26 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.message).toEqual(
         'tidak dapat membuat comment baru karena tipe data tidak sesuai'
       )
+    })
+
+    it('should response 201 and persisted add comment', async () => {
+      const server = await createServer(container)
+
+      const response = await server.inject({
+        method: 'POST',
+        url: `/threads/${threadId}/comments`,
+        payload: {
+          content: 'new content'
+        },
+        headers: {
+          authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(201)
+      expect(responseJson.status).toEqual('success')
+      expect(responseJson.data.addedComment).toBeDefined()
     })
   })
 
@@ -135,38 +135,23 @@ describe('/threads/{threadId}/comments endpoint', () => {
         method: 'POST',
         url: `/threads/${threadId}/comments`,
         payload: {
-          content: 'new content',
+          content: 'new content'
         },
         headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
+          authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseAddCommentJson = JSON.parse(responseAddComment.payload)
       commentId = responseAddCommentJson.data.addedComment.id
     })
 
-    it('should respond with 200 and return success status', async () => {
-      const server = await createServer(container)
-      const response = await server.inject({
-        method: 'DELETE',
-        url: `/threads/${threadId}/comments/${commentId}`,
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      })
-
-      const responseJson = JSON.parse(response.payload)
-      expect(response.statusCode).toEqual(200)
-      expect(responseJson.status).toEqual('success')
-    })
-
-    it('should respond with 403 when user try to remove comment that they dont own', async () => {
+    it('should respond with 403 when user remove comment that they dont own', async () => {
       const server = await createServer(container)
 
-      const loginPayload = {
+      const payloadLogin = {
         username: 'new_user',
-        password: 'secret',
+        password: 'secret'
       }
 
       await server.inject({
@@ -175,14 +160,14 @@ describe('/threads/{threadId}/comments endpoint', () => {
         payload: {
           username: 'new_user',
           password: 'secret',
-          fullname: 'new user full',
+          fullname: 'new user full'
         }
       })
 
       const responseAuthUser = await server.inject({
         method: 'POST',
         url: '/authentications',
-        payload: loginPayload,
+        payload: payloadLogin
       })
 
       const responseAuthNewUserJson = JSON.parse(responseAuthUser.payload)
@@ -192,14 +177,29 @@ describe('/threads/{threadId}/comments endpoint', () => {
         method: 'DELETE',
         url: `/threads/${threadId}/comments/${commentId}`,
         headers: {
-          authorization: `Bearer ${accessTokenAnotherUser}`,
-        },
+          authorization: `Bearer ${accessTokenAnotherUser}`
+        }
       })
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(403)
       expect(responseJson.status).toEqual('fail')
       expect(responseJson.message).toBeDefined()
+    })
+
+    it('should respond with 200 and return success status', async () => {
+      const server = await createServer(container)
+      const response = await server.inject({
+        method: 'DELETE',
+        url: `/threads/${threadId}/comments/${commentId}`,
+        headers: {
+          authorization: `Bearer ${accessToken}`
+        }
+      })
+
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(200)
+      expect(responseJson.status).toEqual('success')
     })
   })
 })

@@ -8,15 +8,16 @@ const bcrypt = require('bcrypt')
 const Jwt = require('@hapi/jwt')
 const pool = require('./database/postgres/pool')
 
-// service (repository, helper, manager, etc)
-const UserRepository = require('../Domains/users/UserRepository')
-const PasswordHash = require('../Applications/security/PasswordHash')
-const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres')
-const BcryptPasswordHash = require('./security/BcryptPasswordHash')
-const ThreadRepository = require('../Domains/threads/ThreadRepository')
+// Repository and password hash
 const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres')
 const CommentRepository = require('../Domains/comments/CommentRepository')
 const CommentRepositoryPostgres = require('./repository/CommentRepositoryPostgres')
+const BcryptPasswordHash = require('./security/BcryptPasswordHash')
+const ThreadRepository = require('../Domains/threads/ThreadRepository')
+const UserRepository = require('../Domains/users/UserRepository')
+const PasswordHash = require('../Applications/security/PasswordHash')
+const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres')
+
 
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase')

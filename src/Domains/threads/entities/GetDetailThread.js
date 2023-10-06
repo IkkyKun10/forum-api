@@ -17,12 +17,8 @@ class GetDetailThread {
       throw new Error('GET_DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY')
     }
 
-    if (typeof id !== 'string' ||
-      typeof title !== 'string' ||
-      typeof body !== 'string' ||
-      typeof date !== 'string' ||
-      typeof username !== 'string' ||
-      !(Array.isArray(comments))) {
+    if (typeof id !== 'string' || typeof title !== 'string' || typeof body !== 'string' ||
+      typeof date !== 'string' || typeof username !== 'string' || !(Array.isArray(comments))) {
       throw new Error('GET_DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }
   }

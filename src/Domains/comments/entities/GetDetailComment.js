@@ -16,11 +16,8 @@ class GetDetailComment {
       throw new Error('GET_DETAIL_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')
     }
 
-    if (
-      typeof id !== 'string' ||
-      typeof date !== 'string' ||
-      typeof username !== 'string' ||
-      typeof content !== 'string'
+    if (typeof id !== 'string' || typeof date !== 'string' ||
+      typeof username !== 'string' || typeof content !== 'string'
     ) {
       throw new Error('GET_DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }

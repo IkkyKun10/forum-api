@@ -6,9 +6,9 @@ const createServer = require('../createServer')
 let threadId
 let accessToken
 
-describe('/threads endpoint', () => {
+describe('/threads endpoint Test', () => {
   beforeEach(async () => {
-    const loginPayload = {
+    const payloadLogin = {
       username: 'saya',
       password: 'super_secret'
     }
@@ -25,14 +25,14 @@ describe('/threads endpoint', () => {
       }
     })
 
-    const responseAuthentication = await server.inject({
+    const responseAuth = await server.inject({
       method: 'POST',
       url: '/authentications',
-      payload: loginPayload
+      payload: payloadLogin
     })
 
-    const responseJsonAuth = JSON.parse(responseAuthentication.payload)
-    accessToken = responseJsonAuth.data.accessToken
+    const responseAuthJson = JSON.parse(responseAuth.payload)
+    accessToken = responseAuthJson.data.accessToken
   })
 
   afterEach(async () => {
@@ -44,18 +44,18 @@ describe('/threads endpoint', () => {
     await pool.end()
   })
 
-  describe('when POST /threads', () => {
+  describe('when POST /threads Test', () => {
     it('should response 400 when request payload not contain needed property', async () => {
       const server = await createServer(container)
 
-      const addPayloadThread = {
+      const addThreadPayload = {
         title: 'new thread'
       }
 
       const response = await server.inject({
         method: 'POST',
         url: '/threads',
-        payload: addPayloadThread,
+        payload: addThreadPayload,
         headers: {
           authorization: `Bearer ${accessToken}`
         }
@@ -64,12 +64,12 @@ describe('/threads endpoint', () => {
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
-      expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena properti yang dibutuhkan tidak ada')
+      expect(responseJson.message).toEqual('thread baru gagal dibuat karena properti yang dibutuhkan tidak ada')
     })
 
     it('should response 400 when request payload not require data type specification', async () => {
-      const addPayloadThread = {
-        title: 1234567890,
+      const addThreadPayload = {
+        title: 9102948589605,
         body: 'body'
       }
 
@@ -78,7 +78,7 @@ describe('/threads endpoint', () => {
       const response = await server.inject({
         method: 'POST',
         url: '/threads',
-        payload: addPayloadThread,
+        payload: addThreadPayload,
         headers: {
           authorization: `Bearer ${accessToken}`
         }
@@ -87,13 +87,13 @@ describe('/threads endpoint', () => {
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
-      expect(responseJson.message).toEqual('tidak dapat membuat thread baru karena tipe data tidak sesuai')
+      expect(responseJson.message).toEqual('thread baru gagal dibuat karena tipe data tidak sesuai')
     })
 
-    it('should response 201 and persisted thread', async () => {
+    it('should response 201 and success add thread', async () => {
       const server = await createServer(container)
 
-      const addPayloadThread = {
+      const addThreadPayload = {
         title: 'new thread',
         body: 'new body'
       }
@@ -101,7 +101,7 @@ describe('/threads endpoint', () => {
       const response = await server.inject({
         method: 'POST',
         url: '/threads',
-        payload: addPayloadThread,
+        payload: addThreadPayload,
         headers: {
           authorization: `Bearer ${accessToken}`
         }
@@ -114,7 +114,7 @@ describe('/threads endpoint', () => {
     })
   })
 
-  describe('when GET /threads/{threadId}', () => {
+  describe('when GET /threads/{threadId} Test', () => {
     beforeEach(async () => {
       const server = await createServer(container)
 
@@ -139,7 +139,7 @@ describe('/threads endpoint', () => {
 
       const response = await server.inject({
         method: 'GET',
-        url: '/threads/thread-id123'
+        url: '/threads/thread-id-not-found-123'
       })
 
       const responseJson = JSON.parse(response.payload)

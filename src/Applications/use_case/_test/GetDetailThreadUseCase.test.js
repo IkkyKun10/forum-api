@@ -4,11 +4,10 @@ const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
 const CommentRepository = require('../../../Domains/comments/CommentRepository')
 const GetDetailThreadUseCase = require('../GetDetailThreadUseCase')
 
-describe('GetDetailUseCase', () => {
+describe('Get Detail UseCase Test', () => {
   it('should orchestrate to get detail thread action correctly', async () => {
-    const payloadParams = {
-      threadId: 'thread-123'
-    }
+    const threadId = 'thread-123'
+
 
     const detailThreadPayload = {
       id: 'thread-123',
@@ -19,12 +18,12 @@ describe('GetDetailUseCase', () => {
       comments: [
         new GetDetailComment({
           id: 'comment-123',
-          content: 'content-test',
+          content: 'test-content',
           date: '2023-10-01',
           username: 'New User'
         }),
         new GetDetailComment({
-          id: 'comment-321',
+          id: 'comment-456',
           content: '**komentar telah dihapus**',
           date: '2023-10-01',
           username: 'User New'
@@ -37,7 +36,7 @@ describe('GetDetailUseCase', () => {
     const mockThreadRepository = new ThreadRepository()
     const mockCommentRepository = new CommentRepository()
 
-    const mockDetailThreadForRepositoryPayload = {
+    const mockDetailThreadRepoPayload = {
       id: 'thread-123',
       title: 'New Title',
       body: 'New Body',
@@ -46,9 +45,9 @@ describe('GetDetailUseCase', () => {
       comments: []
     }
 
-    mockThreadRepository.verifyThreadAvaibility = jest.fn(() => Promise.resolve())
-    mockThreadRepository.getDetailThread = jest.fn().mockImplementation(() => Promise.resolve(
-      new GetDetailThread(mockDetailThreadForRepositoryPayload)
+    mockThreadRepository.verifyThreadAvailability = jest.fn(() => Promise.resolve())
+    mockThreadRepository.getThreadById = jest.fn().mockImplementation(() => Promise.resolve(
+      new GetDetailThread(mockDetailThreadRepoPayload)
     ))
 
     mockCommentRepository.getAllCommentInThread = jest
@@ -56,14 +55,14 @@ describe('GetDetailUseCase', () => {
       .mockImplementation(() => Promise.resolve([
         {
           id: 'comment-123',
-          content: 'content-test',
+          content: 'test-content',
           date: '2023-10-01',
           username: 'New User',
           is_deleted: false
         },
         {
-          id: 'comment-321',
-          content: 'content-1',
+          id: 'comment-456',
+          content: 'other-content',
           date: '2023-10-01',
           username: 'User New',
           is_deleted: true
@@ -75,13 +74,11 @@ describe('GetDetailUseCase', () => {
       commentRepository: mockCommentRepository
     })
 
-    const detailThread = await dummyThreadUseCase.getDetailThread(
-      payloadParams
-    )
+    const detailThread = await dummyThreadUseCase.getThreadById({ threadId })
 
-    expect(mockThreadRepository.verifyThreadAvaibility).toBeCalledWith(payloadParams.threadId)
-    expect(mockThreadRepository.getDetailThread).toBeCalledWith(payloadParams.threadId)
-    expect(mockCommentRepository.getAllCommentInThread).toBeCalledWith(payloadParams.threadId)
+    expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(threadId)
+    expect(mockThreadRepository.getThreadById).toBeCalledWith(threadId)
+    expect(mockCommentRepository.getAllCommentInThread).toBeCalledWith(threadId)
     expect(detailThread).toStrictEqual(expectedDetailThread)
   })
 })

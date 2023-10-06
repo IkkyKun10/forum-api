@@ -3,7 +3,7 @@ const AddedComment = require('../AddedComment')
 describe('a AddedComment entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
-      content: 'Jujutsu Kaisen'
+      id: 'comment-123'
     }
 
     expect(() => new AddedComment(payload)).toThrowError(
@@ -13,7 +13,7 @@ describe('a AddedComment entities', () => {
 
   it('should throw error when payload did not meet data type specification', () => {
     const payload = {
-      id: 'Comment-123',
+      id: 1010110010010,
       content: 'Jujutsu Kaisen',
       owner: 123
     }

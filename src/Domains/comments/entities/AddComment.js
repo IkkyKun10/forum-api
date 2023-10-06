@@ -13,11 +13,8 @@ class AddComment {
     if (!content || !threadId || !owner || !username) {
       throw new Error('ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')
     }
-    if (
-      typeof content !== 'string' ||
-      typeof threadId !== 'string' ||
-      typeof owner !== 'string' ||
-      typeof username !== 'string'
+    if (typeof content !== 'string' || typeof threadId !== 'string' ||
+      typeof owner !== 'string' || typeof username !== 'string'
     ) {
       throw new Error('ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }

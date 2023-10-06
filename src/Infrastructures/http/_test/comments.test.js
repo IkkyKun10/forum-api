@@ -8,7 +8,7 @@ let commentId
 let threadId
 let accessToken
 
-describe('/threads/{threadId}/comments endpoint', () => {
+describe('/threads/{threadId}/comments endpoint Test', () => {
   beforeEach(async () => {
     const payloadLogin = {
       username: 'saya',
@@ -27,14 +27,14 @@ describe('/threads/{threadId}/comments endpoint', () => {
       }
     })
 
-    const responseAuthentication = await server.inject({
+    const responseAuth = await server.inject({
       method: 'POST',
       url: '/authentications',
       payload: payloadLogin
     })
 
-    const responseJsonAuth = JSON.parse(responseAuthentication.payload)
-    accessToken = responseJsonAuth.data.accessToken
+    const responseAuthJson = JSON.parse(responseAuth.payload)
+    accessToken = responseAuthJson.data.accessToken
 
     const responseThread = await server.inject({
       method: 'POST',
@@ -62,15 +62,17 @@ describe('/threads/{threadId}/comments endpoint', () => {
     await pool.end()
   })
 
-  describe('when POST /threads/{threadId}/comments', () => {
+  describe('when POST /threads/{threadId}/comments Test', () => {
     it('should response 400 when request payload not contain needed property', async () => {
       const server = await createServer(container)
+
+      const dataNull = null
 
       const response = await server.inject({
         method: 'POST',
         url: `/threads/${threadId}/comments`,
         payload: {
-          body: 123
+          dataNull,
         },
         headers: {
           authorization: `Bearer ${accessToken}`
@@ -81,7 +83,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
       expect(responseJson.message).toEqual(
-        'tidak dapat membuat comment baru karena properti yang dibutuhkan tidak ada'
+        'comment gagal dibuat karena properti yang dibutuhkan tidak ada'
       )
     })
 
@@ -103,7 +105,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
       expect(responseJson.message).toEqual(
-        'tidak dapat membuat comment baru karena tipe data tidak sesuai'
+        'comment gagal dibuat karena tipe data tidak sesuai'
       )
     })
 
@@ -128,10 +130,11 @@ describe('/threads/{threadId}/comments endpoint', () => {
     })
   })
 
-  describe('when DELETE /threads/{threadId}/comments/{commentId}', () => {
+  describe('when DELETE /threads/{threadId}/comments/{commentId} Test', () => {
     beforeEach(async () => {
+
       const server = await createServer(container)
-      const responseAddComment = await server.inject({
+      const response = await server.inject({
         method: 'POST',
         url: `/threads/${threadId}/comments`,
         payload: {
@@ -142,11 +145,11 @@ describe('/threads/{threadId}/comments endpoint', () => {
         }
       })
 
-      const responseAddCommentJson = JSON.parse(responseAddComment.payload)
+      const responseAddCommentJson = JSON.parse(response.payload)
       commentId = responseAddCommentJson.data.addedComment.id
     })
 
-    it('should respond with 403 when user remove comment that they dont own', async () => {
+    it('should respond 403 when user remove not his comment', async () => {
       const server = await createServer(container)
 
       const payloadLogin = {
@@ -164,14 +167,14 @@ describe('/threads/{threadId}/comments endpoint', () => {
         }
       })
 
-      const responseAuthUser = await server.inject({
+      const responseAuth = await server.inject({
         method: 'POST',
         url: '/authentications',
         payload: payloadLogin
       })
 
-      const responseAuthNewUserJson = JSON.parse(responseAuthUser.payload)
-      const accessTokenAnotherUser = responseAuthNewUserJson.data.accessToken
+      const responseAuthJson = JSON.parse(responseAuth.payload)
+      const accessTokenAnotherUser = responseAuthJson.data.accessToken
 
       const response = await server.inject({
         method: 'DELETE',
@@ -187,8 +190,10 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.message).toBeDefined()
     })
 
-    it('should respond with 200 and return success status', async () => {
+    it('should respond 200 and return success', async () => {
+
       const server = await createServer(container)
+
       const response = await server.inject({
         method: 'DELETE',
         url: `/threads/${threadId}/comments/${commentId}`,

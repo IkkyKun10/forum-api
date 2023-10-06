@@ -6,13 +6,13 @@ const AddComment = require('../../../Domains/comments/entities/AddComment')
 const AddedComment = require('../../../Domains/comments/entities/AddedComment')
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres')
 
-describe('CommentRepositoryPostgres', () => {
+describe('CommentRepositoryPostgres Test', () => {
   beforeEach(async () => {
     await UsersTableTestHelper.addUser({
       id: 'user-123',
       username: 'new user',
       password: 'secret',
-      fullname: 'new user here'
+      fullname: 'new user fullname'
     })
     await ThreadsTableTestHelper.addThread({
       id: 'thread-123',
@@ -33,10 +33,10 @@ describe('CommentRepositoryPostgres', () => {
     await pool.end()
   })
 
-  describe('addComment function', () => {
+  describe('add Comment Test', () => {
     it('should persist add comment and return comment correctly', async () => {
       const addCommentPayload = new AddComment({
-        content: 'content-test',
+        content: 'test-for-content',
         username: 'new user',
         threadId: 'thread-123',
         owner: 'user-123'
@@ -44,7 +44,7 @@ describe('CommentRepositoryPostgres', () => {
 
       const expectedAddedComment = new AddedComment({
         id: 'comment-123',
-        content: 'content-test',
+        content: 'test-for-content',
         owner: 'user-123'
       })
 
@@ -65,10 +65,10 @@ describe('CommentRepositoryPostgres', () => {
     })
   })
 
-  describe('findCommentById function', () => {
+  describe('find Comment By Id Test', () => {
     beforeEach(async () => {
       await CommentsTableTestHelper.addComment({
-        id: 'comment-321',
+        id: 'comment-456',
         threadId: 'thread-123',
         username: 'new user',
         date: '2023',
@@ -85,33 +85,30 @@ describe('CommentRepositoryPostgres', () => {
     it('should throw NotFoundError when comment not found', async () => {
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
 
-      await expect(
-        commentRepositoryPostgres.findCommentById('comment-999999')
-      ).rejects.toThrowError('Comment Not Found')
+      await expect(commentRepositoryPostgres.getCommentById('comment-00000000000'))
+        .rejects.toThrowError('Comment tidak ditemukan')
     })
 
     it('should resolve if comment exists', async () => {
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
 
-      await expect(
-        commentRepositoryPostgres.findCommentById('comment-321')
-      ).resolves.toBeUndefined()
-      await expect(
-        commentRepositoryPostgres.findCommentById('comment-321')
-      ).resolves.not.toThrowError()
+      await expect(commentRepositoryPostgres.getCommentById('comment-456'))
+        .resolves.toBeUndefined()
+      await expect(commentRepositoryPostgres.getCommentById('comment-456'))
+        .resolves.not.toThrowError()
     })
   })
 
-  describe('verifyComment function', () => {
+  describe('verify Comment test', () => {
     beforeEach(async () => {
       await UsersTableTestHelper.addUser({
         id: 'user-321',
         username: 'new user again',
         password: 'secret',
-        fullname: 'super fullname'
+        fullname: 'fullname'
       })
       await CommentsTableTestHelper.addComment({
-        id: 'comment-444',
+        id: 'comment-111',
         threadId: 'thread-123',
         username: 'new user again',
         date: '2023',
@@ -126,22 +123,20 @@ describe('CommentRepositoryPostgres', () => {
       await CommentsTableTestHelper.cleanTable()
     })
 
-    it('should throw AuthorizationError when comment not authorized', async () => {
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
-      const isCommentAuthorized = commentRepositoryPostgres.verifyComment({
-        commentId: 'comment-444',
+    it('should throw Authorization Error when comment not authorized', async () => {
+      const commentRepoPostgres = new CommentRepositoryPostgres(pool, {})
+      const isCommentAuthorized = commentRepoPostgres.verifyComment({
+        commentId: 'comment-111',
         owner: 'user-123'
       })
 
-      await expect(isCommentAuthorized).rejects.toThrowError(
-        'Anda tidak memiliki akses untuk melihat ini'
-      )
+      await expect(isCommentAuthorized).rejects.toThrowError('Anda tidak punya akses untuk melakukan aksi ini')
     })
 
-    it('should throw true when comment is authorized', async () => {
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
-      const isCommentAuthorized = commentRepositoryPostgres.verifyComment({
-        commentId: 'comment-444',
+    it('should not throw error when comment is authorized', async () => {
+      const commentRepoPostgres = new CommentRepositoryPostgres(pool, {})
+      const isCommentAuthorized = commentRepoPostgres.verifyComment({
+        commentId: 'comment-111',
         owner: 'user-321'
       })
 
@@ -149,11 +144,11 @@ describe('CommentRepositoryPostgres', () => {
     })
   })
 
-  describe('getAllCommentInThread function', () => {
+  describe('get All Comment In Thread Test', () => {
     it('should return all comment in thread correctly', async () => {
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
+      const commentRepoPostgres = new CommentRepositoryPostgres(pool, {})
       await CommentsTableTestHelper.addComment({
-        id: 'comment-777',
+        id: 'comment-000',
         threadId: 'thread-123',
         username: 'new user',
         date: '2023',
@@ -162,68 +157,64 @@ describe('CommentRepositoryPostgres', () => {
         owner: 'user-123'
       })
       await CommentsTableTestHelper.addComment({
-        id: 'comment-888',
+        id: 'comment-111',
         threadId: 'thread-123',
         username: 'new user',
         date: '2023',
-        content: 'new content super',
+        content: 'other content',
         isDelete: false,
         owner: 'user-123'
       })
 
       const expectedDetailComment = [
         {
-          id: 'comment-777',
+          id: 'comment-000',
           username: 'new user',
           date: '2023',
           content: 'new content',
           is_deleted: false
         },
         {
-          id: 'comment-888',
+          id: 'comment-111',
           username: 'new user',
           date: '2023',
-          content: 'new content super',
+          content: 'other content',
           is_deleted: false
         }
       ]
-      const detailComment = await commentRepositoryPostgres.getAllCommentInThread('thread-123')
+      const detailComment = await commentRepoPostgres.getAllCommentInThread('thread-123')
 
       expect(detailComment).toStrictEqual(expectedDetailComment)
+
       expect(detailComment).toHaveLength(2)
+
       expect(detailComment[0].id).toStrictEqual(expectedDetailComment[0].id)
-      expect(detailComment[0].username).toStrictEqual(
-        expectedDetailComment[0].username
-      )
-      expect(detailComment[0].date).toStrictEqual(
-        expectedDetailComment[0].date
-      )
-      expect(detailComment[0].content).toStrictEqual(
-        expectedDetailComment[0].content
-      )
-      expect(detailComment[0].is_deleted).toStrictEqual(
-        expectedDetailComment[0].is_deleted
-      )
+
+      expect(detailComment[0].username).toStrictEqual(expectedDetailComment[0].username)
+
+      expect(detailComment[0].date).toStrictEqual(expectedDetailComment[0].date)
+
+      expect(detailComment[0].content).toStrictEqual(expectedDetailComment[0].content)
+
+      expect(detailComment[0].is_deleted).toStrictEqual(expectedDetailComment[0].is_deleted)
+
       expect(detailComment[1].id).toStrictEqual(expectedDetailComment[1].id)
-      expect(detailComment[1].username).toStrictEqual(
-        expectedDetailComment[1].username
-      )
-      expect(detailComment[1].date).toStrictEqual(
-        expectedDetailComment[1].date
-      )
-      expect(detailComment[1].content).toStrictEqual(
-        expectedDetailComment[1].content
-      )
-      expect(detailComment[1].is_deleted).toStrictEqual(
-        expectedDetailComment[1].is_deleted
-      )
+
+      expect(detailComment[1].username).toStrictEqual(expectedDetailComment[1].username)
+
+      expect(detailComment[1].date).toStrictEqual(expectedDetailComment[1].date)
+
+      expect(detailComment[1].content).toStrictEqual(expectedDetailComment[1].content)
+
+      expect(detailComment[1].is_deleted).toStrictEqual(expectedDetailComment[1].is_deleted)
+
     })
   })
 
-  describe('deleteComment function', () => {
+  describe('delete Comment Test', () => {
     beforeEach(async () => {
       await CommentsTableTestHelper.addComment({
-        id: 'comment-555',
+        id: 'comment-222',
         threadId: 'thread-123',
         username: 'new user',
         date: '2023',
@@ -239,16 +230,16 @@ describe('CommentRepositoryPostgres', () => {
     })
 
     it('should remove comment correctly', async () => {
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
-      const comment = await commentRepositoryPostgres.deleteComment(
-        'comment-555'
+      const commentRepoPostgres = new CommentRepositoryPostgres(pool, {})
+      const comment = await commentRepoPostgres.deleteCommentById(
+        'comment-222'
       )
 
       const commentDetail = await CommentsTableTestHelper.getDetailComment(
-        'comment-555'
+        'comment-222'
       )
 
-      expect(comment.id).toEqual('comment-555')
+      expect(comment.id).toEqual('comment-222')
       expect(commentDetail.is_deleted).toEqual(true)
     })
   })

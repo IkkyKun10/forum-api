@@ -1,8 +1,8 @@
+const { isEmpty } = require('lodash')
 const NotFoundError = require('../../Commons/exceptions/NotFoundError')
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError')
 const AddedComment = require('../../Domains/comments/entities/AddedComment')
 const CommentRepository = require('../../Domains/comments/CommentRepository')
-const { isEmpty } = require('lodash')
 
 class CommentRepositoryPostgres extends CommentRepository {
   constructor (pool, idGenerator) {
@@ -12,7 +12,7 @@ class CommentRepositoryPostgres extends CommentRepository {
   }
 
   async addComment (payload) {
-    const { threadId, username, content, owner } = payload
+    const { threadId, content, owner, username } = payload
     const id = `comment-${this._idGenerator()}`
     const date = new Date()
     const isDeleted = false
@@ -35,11 +35,11 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const result = await this._pool.query(query)
     if (isEmpty(result.rows)) {
-      throw new AuthorizationError('Anda tidak memiliki akses untuk melihat ini')
+      throw new AuthorizationError('Anda tidak punya akses untuk melakukan aksi ini')
     }
   }
 
-  async findCommentById (commentId) {
+  async getCommentById (commentId) {
     const query = {
       text: 'SELECT * FROM comments WHERE id = $1',
       values: [commentId]
@@ -47,7 +47,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const result = await this._pool.query(query)
     if (!result.rowCount) {
-      throw new NotFoundError('Comment Not Found')
+      throw new NotFoundError('Comment tidak ditemukan')
     }
   }
 
@@ -63,13 +63,14 @@ class CommentRepositoryPostgres extends CommentRepository {
     return result.rows
   }
 
-  async deleteComment (commentId) {
+  async deleteCommentById (commentId) {
     const query = {
       text: 'UPDATE comments set is_deleted = true WHERE id = $1 RETURNING id',
       values: [commentId]
     }
 
     const result = await this._pool.query(query)
+
     const { id } = result.rows[0]
 
     return {

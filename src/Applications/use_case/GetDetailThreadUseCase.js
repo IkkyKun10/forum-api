@@ -6,10 +6,10 @@ class GetDetailThreadUseCase {
     this._commentRepository = commentRepository
   }
 
-  async getDetailThread (payload) {
+  async getThreadById (payload) {
     const { threadId } = payload
-    await this._threadRepository.verifyThreadAvaibility(threadId)
-    const threadDetail = await this._threadRepository.getDetailThread(threadId)
+    await this._threadRepository.verifyThreadAvailability(threadId)
+    const threadDetail = await this._threadRepository.getThreadById(threadId)
     const commentDetail = await this._commentRepository.getAllCommentInThread(threadId)
 
     const comments = await Promise.all(commentDetail.map(async (comment) => {

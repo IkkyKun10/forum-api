@@ -6,14 +6,27 @@ class GetDetailThreadUseCase {
     this._commentRepository = commentRepository
   }
 
-  async getThreadById (payload) {
-    const { threadId } = payload
-    await this._threadRepository.verifyThreadAvailability(threadId)
-    const threadDetail = await this._threadRepository.getThreadById(threadId)
-    const commentDetail = await this._commentRepository.getAllCommentInThread(threadId)
+  async getThreadById (threadId) {
+    await this._threadRepository.verifyThreadExisting(threadId)
 
-    const comments = await Promise.all(commentDetail.map(async (comment) => {
-      return new GetDetailComment(comment)
+    const threadDetail = await this._threadRepository.getThreadById(threadId)
+
+    const commentsInThread = await this._commentRepository.getCommentsInThread(threadId)
+
+    const replies = await this._threadRepository.getRepliesByThreadId(threadId)
+
+    const comments = await Promise.all(commentsInThread.map(async (comment) => {
+      return new GetDetailComment(
+        {
+          ...comment,
+          replies: replies.filter((replie) => replie.comment_id === comment.id).map((replie) => ({
+            id: replie.id,
+            content: replie.is_deleted ? '**balasan telah dihapus**' : replie.content,
+            date: replie.date,
+            username: replie.username,
+          }))
+        }
+      )
     }))
 
     threadDetail.comments = comments

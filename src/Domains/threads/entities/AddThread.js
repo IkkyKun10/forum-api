@@ -1,6 +1,6 @@
 class AddThread {
   constructor (payload) {
-    this._verifyOwner(payload)
+    this._verifyPayload(payload)
     const { title, body, owner } = payload
 
     this.title = title
@@ -8,7 +8,7 @@ class AddThread {
     this.owner = owner
   }
 
-  _verifyOwner ({ title, body, owner }) {
+  _verifyPayload ({ title, body, owner }) {
     if (!title || !body || !owner) {
       throw new Error('ADD_THREAD.NOT_CONTAIN_NEEDED_PROPERTY')
     }

@@ -20,7 +20,9 @@ DomainErrorTranslator._directories = {
   'ADD_THREAD.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('thread baru gagal dibuat karena properti yang dibutuhkan tidak ada'),
   'ADD_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('thread baru gagal dibuat karena tipe data tidak sesuai'),
   'ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('comment gagal dibuat karena properti yang dibutuhkan tidak ada'),
-  'ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('comment gagal dibuat karena tipe data tidak sesuai')
+  'ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('comment gagal dibuat karena tipe data tidak sesuai'),
+  'ADD_REPLIES.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('replies gagal dibuat karena properti yang dibutuhkan tidak ada'),
+  'ADD_REPLIES.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('replies gagal dibuat karena tipe data tidak sesuai')
 }
 
 module.exports = DomainErrorTranslator

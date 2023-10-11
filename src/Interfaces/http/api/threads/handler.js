@@ -32,7 +32,9 @@ class ThreadsHandler {
   async getThreadByIdHandler (request, h) {
     const threadUseCase = this._container.getInstance(GetDetailThreadUseCase.name)
 
-    const thread = await threadUseCase.getThreadById(request.params)
+    const { threadId } = request.params
+
+    const thread = await threadUseCase.getThreadById(threadId)
 
     const response = h.response({
       status: 'success',

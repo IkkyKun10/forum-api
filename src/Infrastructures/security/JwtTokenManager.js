@@ -29,13 +29,6 @@ class JwtTokenManager extends AuthenticationTokenManager {
     const artifacts = this._jwt.decode(token)
     return artifacts.decoded.payload
   }
-
-  async getBearerToken (header) {
-    if (!header) {
-      throw new AuthenticationError('Missing authentication')
-    }
-    return header.replace(/^Bearer\s+/, '')
-  }
 }
 
 module.exports = JwtTokenManager

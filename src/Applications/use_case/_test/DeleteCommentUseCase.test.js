@@ -6,40 +6,39 @@ describe('Delete Comment UseCase Test', () => {
   it('should orchestrate the delete comment use case properly', async () => {
     const payload = {
       threadId: 'thread-12345',
-      commentId: 'comment-12345'
+      commentId: 'comment-12345',
+      owner: 'user-123'
     }
 
-    const owner = 'user-123'
-    const expectedDeletedComment = {
-      id: 'comment-12345'
-    }
+    const mockThreadRepo = new ThreadRepository()
+    const mockCommentsRepo = new CommentRepository()
 
-    const mockThreadRepository = new ThreadRepository()
-    const mockCommentRepository = new CommentRepository()
+    mockThreadRepo.verifyThreadExisting = jest.fn().mockImplementation(() => Promise.resolve())
+    mockCommentsRepo.getCommentById = jest.fn().mockImplementation(() => Promise.resolve())
 
-    mockCommentRepository.verifyComment = jest.fn().mockImplementation(() => Promise.resolve())
-    mockCommentRepository.getCommentById = jest.fn().mockImplementation(() => Promise.resolve())
+    mockCommentsRepo.verifyCommentIsOwnership = jest.fn().mockImplementation(() => Promise.resolve())
+    mockCommentsRepo.deleteCommentById = jest.fn().mockImplementation(() => Promise.resolve())
 
-    mockThreadRepository.verifyThreadAvailability = jest.fn().mockImplementation(() => Promise.resolve())
-    mockCommentRepository.deleteCommentById = jest.fn().mockImplementation(() => Promise.resolve())
-
-    const removeCommentUseCase = new DeleteCommentUseCase({
-      threadRepository: mockThreadRepository,
-      commentRepository: mockCommentRepository
-    })
+    const deleteCommentUseCase = new DeleteCommentUseCase(
+      {
+        threadRepository: mockThreadRepo,
+        commentRepository: mockCommentsRepo
+      }
+    )
 
     const deletePayload = {
-      ...payload,
-      owner
+      payload
     }
 
-    await removeCommentUseCase.deleteCommentById(deletePayload)
+    await deleteCommentUseCase.deleteCommentById(deletePayload)
 
-    expect(mockCommentRepository.getCommentById).toBeCalledWith(payload.commentId)
-    expect(mockCommentRepository.verifyComment).toBeCalledWith({
-      commentId: payload.commentId,
-      owner
-    })
-    expect(mockCommentRepository.deleteCommentById).toBeCalledWith(expectedDeletedComment.id)
+    expect(mockCommentsRepo.getCommentById).toBeCalledWith(deletePayload.commentId)
+    expect(mockCommentsRepo.verifyCommentIsOwnership).toBeCalledWith(
+      {
+        commentId: deletePayload.commentId,
+        owner: deletePayload.owner,
+      }
+    )
+    expect(mockCommentsRepo.deleteCommentById).toBeCalledWith(deletePayload.commentId)
   })
 })

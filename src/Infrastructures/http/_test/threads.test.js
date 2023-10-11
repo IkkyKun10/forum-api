@@ -15,21 +15,25 @@ describe('/threads endpoint Test', () => {
 
     const server = await createServer(container)
 
-    await server.inject({
-      method: 'POST',
-      url: '/users',
-      payload: {
-        username: 'saya',
-        password: 'super_secret',
-        fullname: 'saya saya'
+    await server.inject(
+      {
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'saya',
+          password: 'super_secret',
+          fullname: 'saya saya'
+        }
       }
-    })
+    )
 
-    const responseAuth = await server.inject({
-      method: 'POST',
-      url: '/authentications',
-      payload: payloadLogin
-    })
+    const responseAuth = await server.inject(
+      {
+        method: 'POST',
+        url: '/authentications',
+        payload: payloadLogin
+      }
+    )
 
     const responseAuthJson = JSON.parse(responseAuth.payload)
     accessToken = responseAuthJson.data.accessToken
@@ -52,14 +56,16 @@ describe('/threads endpoint Test', () => {
         title: 'new thread'
       }
 
-      const response = await server.inject({
-        method: 'POST',
-        url: '/threads',
-        payload: addThreadPayload,
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const response = await server.inject(
+        {
+          method: 'POST',
+          url: '/threads',
+          payload: addThreadPayload,
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
@@ -75,14 +81,16 @@ describe('/threads endpoint Test', () => {
 
       const server = await createServer(container)
 
-      const response = await server.inject({
-        method: 'POST',
-        url: '/threads',
-        payload: addThreadPayload,
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const response = await server.inject(
+        {
+          method: 'POST',
+          url: '/threads',
+          payload: addThreadPayload,
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
@@ -91,21 +99,23 @@ describe('/threads endpoint Test', () => {
     })
 
     it('should response 201 and success add thread', async () => {
-      const server = await createServer(container)
-
       const addThreadPayload = {
         title: 'new thread',
         body: 'new body'
       }
 
-      const response = await server.inject({
-        method: 'POST',
-        url: '/threads',
-        payload: addThreadPayload,
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const server = await createServer(container)
+
+      const response = await server.inject(
+        {
+          method: 'POST',
+          url: '/threads',
+          payload: addThreadPayload,
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(201)
@@ -118,17 +128,19 @@ describe('/threads endpoint Test', () => {
     beforeEach(async () => {
       const server = await createServer(container)
 
-      const response = await server.inject({
-        method: 'POST',
-        url: '/threads',
-        payload: {
-          title: 'new thread',
-          body: 'new body'
-        },
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const response = await server.inject(
+        {
+          method: 'POST',
+          url: '/threads',
+          payload: {
+            title: 'new thread',
+            body: 'new body'
+          },
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       threadId = responseJson.data.addedThread.id
@@ -137,10 +149,12 @@ describe('/threads endpoint Test', () => {
     it('should respond with 404 if thread does not exist', async () => {
       const server = await createServer(container)
 
-      const response = await server.inject({
-        method: 'GET',
-        url: '/threads/thread-id-not-found-123'
-      })
+      const response = await server.inject(
+        {
+          method: 'GET',
+          url: '/threads/thread-id-not-found-123'
+        }
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(404)
@@ -151,10 +165,12 @@ describe('/threads endpoint Test', () => {
     it('should response 200 and show detail thread', async () => {
       const server = await createServer(container)
 
-      const response = await server.inject({
-        method: 'GET',
-        url: `/threads/${threadId}`
-      })
+      const response = await server.inject(
+        {
+          method: 'GET',
+          url: `/threads/${threadId}`
+        }
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(200)

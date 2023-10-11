@@ -17,36 +17,42 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
 
     const server = await createServer(container)
 
-    await server.inject({
-      method: 'POST',
-      url: '/users',
-      payload: {
-        username: 'saya',
-        password: 'super_secret',
-        fullname: 'saya saya'
+    await server.inject(
+      {
+        method: 'POST',
+        url: '/users',
+        payload: {
+          username: 'saya',
+          password: 'super_secret',
+          fullname: 'saya saya'
+        }
       }
-    })
+    )
 
-    const responseAuth = await server.inject({
-      method: 'POST',
-      url: '/authentications',
-      payload: payloadLogin
-    })
+    const responseAuth = await server.inject(
+      {
+        method: 'POST',
+        url: '/authentications',
+        payload: payloadLogin
+      }
+    )
 
     const responseAuthJson = JSON.parse(responseAuth.payload)
     accessToken = responseAuthJson.data.accessToken
 
-    const responseThread = await server.inject({
-      method: 'POST',
-      url: '/threads',
-      payload: {
-        title: 'new thread',
-        body: 'new body'
-      },
-      headers: {
-        authorization: `Bearer ${accessToken}`
+    const responseThread = await server.inject(
+      {
+        method: 'POST',
+        url: '/threads',
+        payload: {
+          title: 'new thread',
+          body: 'new body'
+        },
+        headers: {
+          authorization: `Bearer ${accessToken}`
+        }
       }
-    })
+    )
 
     const responseThreadJson = JSON.parse(responseThread.payload)
     threadId = responseThreadJson.data.addedThread.id
@@ -68,60 +74,63 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
 
       const dataNull = null
 
-      const response = await server.inject({
-        method: 'POST',
-        url: `/threads/${threadId}/comments`,
-        payload: {
-          dataNull,
-        },
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const response = await server.inject(
+        {
+          method: 'POST',
+          url: `/threads/${threadId}/comments`,
+          payload: {
+            dataNull,
+          },
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
-      expect(responseJson.message).toEqual(
-        'comment gagal dibuat karena properti yang dibutuhkan tidak ada'
-      )
+
+      expect(responseJson.message).toEqual('comment gagal dibuat karena properti yang dibutuhkan tidak ada')
     })
 
     it('should response 400 when request payload not meet data type specification', async () => {
       const server = await createServer(container)
 
-      const response = await server.inject({
-        method: 'POST',
-        url: `/threads/${threadId}/comments`,
-        payload: {
-          content: 123
-        },
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const response = await server.inject(
+        {
+          method: 'POST',
+          url: `/threads/${threadId}/comments`,
+          payload: {
+            content: 1234858567696007
+          },
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
-      expect(responseJson.message).toEqual(
-        'comment gagal dibuat karena tipe data tidak sesuai'
-      )
+      expect(responseJson.message).toEqual('comment gagal dibuat karena tipe data tidak sesuai')
     })
 
     it('should response 201 and persisted add comment', async () => {
       const server = await createServer(container)
 
-      const response = await server.inject({
-        method: 'POST',
-        url: `/threads/${threadId}/comments`,
-        payload: {
-          content: 'new content'
-        },
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const response = await server.inject(
+        {
+          method: 'POST',
+          url: `/threads/${threadId}/comments`,
+          payload: {
+            content: 'new content'
+          },
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(201)
@@ -134,16 +143,18 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
     beforeEach(async () => {
 
       const server = await createServer(container)
-      const response = await server.inject({
-        method: 'POST',
-        url: `/threads/${threadId}/comments`,
-        payload: {
-          content: 'new content'
-        },
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const response = await server.inject(
+        {
+          method: 'POST',
+          url: `/threads/${threadId}/comments`,
+          payload: {
+            content: 'new content'
+          },
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseAddCommentJson = JSON.parse(response.payload)
       commentId = responseAddCommentJson.data.addedComment.id
@@ -153,36 +164,42 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
       const server = await createServer(container)
 
       const payloadLogin = {
-        username: 'new_user',
+        username: 'new_other_user',
         password: 'secret'
       }
 
-      await server.inject({
-        method: 'POST',
-        url: '/users',
-        payload: {
-          username: 'new_user',
-          password: 'secret',
-          fullname: 'new user full'
+      await server.inject(
+        {
+          method: 'POST',
+          url: '/users',
+          payload: {
+            username: 'new_other_user',
+            password: 'secret',
+            fullname: 'new other user full'
+          }
         }
-      })
+      )
 
-      const responseAuth = await server.inject({
-        method: 'POST',
-        url: '/authentications',
-        payload: payloadLogin
-      })
+      const responseAuth = await server.inject(
+        {
+          method: 'POST',
+          url: '/authentications',
+          payload: payloadLogin
+        }
+      )
 
       const responseAuthJson = JSON.parse(responseAuth.payload)
       const accessTokenAnotherUser = responseAuthJson.data.accessToken
 
-      const response = await server.inject({
-        method: 'DELETE',
-        url: `/threads/${threadId}/comments/${commentId}`,
-        headers: {
-          authorization: `Bearer ${accessTokenAnotherUser}`
+      const response = await server.inject(
+        {
+          method: 'DELETE',
+          url: `/threads/${threadId}/comments/${commentId}`,
+          headers: {
+            authorization: `Bearer ${accessTokenAnotherUser}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(403)
@@ -194,13 +211,15 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
 
       const server = await createServer(container)
 
-      const response = await server.inject({
-        method: 'DELETE',
-        url: `/threads/${threadId}/comments/${commentId}`,
-        headers: {
-          authorization: `Bearer ${accessToken}`
+      const response = await server.inject(
+        {
+          method: 'DELETE',
+          url: `/threads/${threadId}/comments/${commentId}`,
+          headers: {
+            authorization: `Bearer ${accessToken}`
+          }
         }
-      })
+      )
 
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(200)

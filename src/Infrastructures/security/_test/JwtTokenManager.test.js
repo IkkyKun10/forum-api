@@ -68,28 +68,6 @@ describe('JwtTokenManager', () => {
     })
   })
 
-  describe('Get bearer token test', () => {
-    it('should return token correctly from a header', async () => {
-      const jwtTokenManager = new JwtTokenManager(Jwt.token)
-      const header = 'Bearer tokenNewtoken'
-
-      const token = await jwtTokenManager.getBearerToken(header)
-
-      expect(token).toEqual('tokenNewtoken')
-    })
-
-    it('should throw error when no header is provided', async () => {
-      // arrange
-      const jwtTokenManager = new JwtTokenManager(Jwt.token)
-      const header = ''
-
-      // action & assert
-      await expect(jwtTokenManager.getBearerToken(header)).rejects.toThrow(
-        AuthenticationError
-      )
-    })
-  })
-
   describe('decodePayload function', () => {
     it('should decode payload correctly', async () => {
       // Arrange

@@ -7,13 +7,16 @@ describe('CommentRepository interface', () => {
     await expect(commentsRepository.addComment({}))
       .rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
 
-    await expect(commentsRepository.getAllCommentInThread(''))
+    await expect(commentsRepository.getCommentsInThread(''))
       .rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
 
     await expect(commentsRepository.getCommentById(''))
       .rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
 
-    await expect(commentsRepository.verifyComment({}))
+    await expect(commentsRepository.verifyCommentIsOwnership({}))
+      .rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+
+    await expect(commentsRepository.verifyCommentsExisting('', ''))
       .rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
 
     await expect(commentsRepository.deleteCommentById(''))

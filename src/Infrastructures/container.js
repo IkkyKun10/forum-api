@@ -1,8 +1,5 @@
-/* istanbul ignore file */
-
 const { createContainer } = require('instances-container')
 
-// external agency
 const { nanoid } = require('nanoid')
 const bcrypt = require('bcrypt')
 const Jwt = require('@hapi/jwt')
@@ -17,7 +14,8 @@ const ThreadRepository = require('../Domains/threads/ThreadRepository')
 const UserRepository = require('../Domains/users/UserRepository')
 const PasswordHash = require('../Applications/security/PasswordHash')
 const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres')
-
+const RepliesRepository = require('../Domains/reply/RepliesRepository')
+const RepliesRepositoryPostgres = require('./repository/RepliesRepositoryPostgres')
 
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase')
@@ -32,6 +30,8 @@ const AddThreadUseCase = require('../Applications/use_case/AddThreadUseCase')
 const GetDetailThreadUseCase = require('../Applications/use_case/GetDetailThreadUseCase')
 const AddCommentUseCase = require('../Applications/use_case/AddCommentUseCase')
 const DeleteCommentUseCase = require('../Applications/use_case/DeleteCommentUseCase')
+const AddRepliesUseCase = require('../Applications/use_case/AddRepliesUseCase')
+const DeleteRepliesUseCase = require('../Applications/use_case/DeleteRepliesUseCase')
 
 const container = createContainer()
 
@@ -100,6 +100,20 @@ container.register([
   {
     key: CommentRepository.name,
     Class: CommentRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool
+        },
+        {
+          concrete: nanoid
+        }
+      ]
+    }
+  },
+  {
+    key: RepliesRepository.name,
+    Class: RepliesRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -246,6 +260,40 @@ container.register([
         {
           name: 'commentRepository',
           internal: CommentRepository.name
+        }
+      ]
+    }
+  },
+  {
+    key: AddRepliesUseCase.name,
+    Class: AddRepliesUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name
+        },
+        {
+          name: 'repliesRepository',
+          internal: RepliesRepository.name
+        }
+      ]
+    }
+  },
+  {
+    key: DeleteRepliesUseCase.name,
+    Class: DeleteRepliesUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'repliesRepository',
+          internal: RepliesRepository.name
         }
       ]
     }

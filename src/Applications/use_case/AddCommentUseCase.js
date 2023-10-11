@@ -7,8 +7,9 @@ class AddCommentUseCase {
   }
 
   async addComment (payload) {
-    await this._threadRepository.verifyThreadAvailability(payload.threadId)
-    return this._commentRepository.addComment(new AddComment(payload))
+    const addComment = new AddComment(payload)
+    await this._threadRepository.verifyThreadExisting(payload.threadId)
+    return this._commentRepository.addComment(addComment)
   }
 }
 

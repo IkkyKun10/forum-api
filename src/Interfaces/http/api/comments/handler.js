@@ -12,10 +12,10 @@ class CommentsHandler {
     const { threadId } = request.params
     const commentUseCase = this._container.getInstance(AddCommentUseCase.name)
     const addCommentPayload = {
-      content,
       threadId,
+      username,
+      content,
       owner,
-      username
     }
 
     const addedComment = await commentUseCase.addComment(addCommentPayload)

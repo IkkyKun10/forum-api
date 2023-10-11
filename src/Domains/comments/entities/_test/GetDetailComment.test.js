@@ -3,39 +3,38 @@ const GetDetailComment = require('../GetDetailComment')
 describe('a Detail Comment entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
-      id: 'Comment-312',
-      username: 'user-123'
+      id: 'comment-123',
+      username: 'username_test'
     }
-    expect(() => new GetDetailComment(payload)).toThrowError(
-      'GET_DETAIL_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY'
-    )
+    expect(() => new GetDetailComment(payload)).toThrowError('GET_DETAIL_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')
   })
 
   it('should throw error when payload did not meet data type specification', () => {
-    const falseCommentId = {
+    const payload = {
       id: 1234567890,
+      username: Array,
       date: '2023-10-01',
-      username: 'New User',
       content: 101010010,
+      replies: Array
     }
-    expect(() => new GetDetailComment(falseCommentId)).toThrowError(
-      'GET_DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION'
-    )
+    expect(() => new GetDetailComment(payload)).toThrowError('GET_DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
   })
 
   it('should get detailComment correctly', () => {
-    const expectedDetailComment = {
-      id: 'Comment-123',
+    const detailPayload = {
+      id: 'comment-123',
+      username: 'username_test',
       date: '2023-10-01',
-      username: 'New User',
-      content: 'content-123'
+      content: 'new content',
+      replies: [],
     }
 
-    const { id, date, username, content } = new GetDetailComment(expectedDetailComment)
+    const { id, date, username, content, replies } = new GetDetailComment(detailPayload)
 
-    expect(id).toEqual(expectedDetailComment.id)
-    expect(date).toEqual(expectedDetailComment.date)
-    expect(username).toEqual(expectedDetailComment.username)
-    expect(content).toEqual(expectedDetailComment.content)
+    expect(id).toEqual(detailPayload.id)
+    expect(username).toEqual(detailPayload.username)
+    expect(date).toEqual(detailPayload.date)
+    expect(content).toEqual(detailPayload.content)
+    expect(replies).toEqual(detailPayload.replies)
   })
 })

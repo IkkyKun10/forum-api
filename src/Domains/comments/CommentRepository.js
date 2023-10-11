@@ -3,7 +3,7 @@ class CommentRepository {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
-  async getAllCommentInThread (threadId) {
+  async verifyCommentIsOwnership (commentPayload) {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
@@ -11,7 +11,11 @@ class CommentRepository {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
-  async verifyComment (commentPayload) {
+  async getCommentsInThread (threadId) {
+    throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
+  }
+
+  async verifyCommentsExisting(commentId, threadId) {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 

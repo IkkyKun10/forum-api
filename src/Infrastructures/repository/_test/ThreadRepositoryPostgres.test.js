@@ -8,12 +8,14 @@ const GetDetailThread = require('../../../Domains/threads/entities/GetDetailThre
 
 describe('Thread Repository Postgres Test', () => {
   beforeAll(async () => {
-    await UsersTableTestHelper.addUser({
-      id: 'user-123',
-      username: 'Gojokun',
-      password: 'super_secret',
-      fullname: 'Gojo Satoru'
-    })
+    await UsersTableTestHelper.addUser(
+      {
+        id: 'user-123',
+        username: 'Gojokun',
+        password: 'super_secret',
+        fullname: 'Gojo Satoru'
+      }
+    )
   })
 
   afterAll(async () => {
@@ -24,97 +26,108 @@ describe('Thread Repository Postgres Test', () => {
 
   describe('add Thread Test', () => {
     it('should persist add thread and return thread correctly', async () => {
-      const addThreadPayload = new AddThread({
-        title: 'Gojo Satoru',
-        body: 'Kill by sukuna',
-        owner: 'user-123'
-      })
+      const addThread = new AddThread(
+        {
+          title: 'Gojo Satoru',
+          body: 'Kill by sukuna',
+          owner: 'user-123'
+        }
+      )
 
-      const addThread = {
-        ...addThreadPayload,
-        date: '2023'
-      }
-
-      const fakeIdGen = () => '123'
+      const fakeIdGen = () => '12345'
 
       const threadRepoPostgres = new ThreadRepositoryPostgres(pool, fakeIdGen)
 
-      const addedThread = await threadRepoPostgres.addThread(addThread)
+      const actualAddedThread = await threadRepoPostgres.addThread(addThread)
 
-      const thread = await ThreadsTableTestHelper.getThreadById('thread-123')
+      const thread = await ThreadsTableTestHelper.getThreadById('thread-12345')
+
+      const expectedAddedThread = new AddedThread(
+        {
+          id: 'thread-12345',
+          title: 'Gojo Satoru',
+          body: 'Kill by sukuna',
+          owner: 'user-123'
+        }
+      )
       expect(thread).toHaveLength(1)
-      expect(addedThread).toStrictEqual(new AddedThread({
-        id: 'thread-123',
-        title: 'Gojo Satoru',
-        body: 'Kill by sukuna',
-        owner: 'user-123'
-      }))
+      expect(actualAddedThread).toStrictEqual(expectedAddedThread)
     })
 
-    describe('get Detail Thread Test', () => {
+    describe('verify Thread existing Test', () => {
       beforeEach(async () => {
-        await ThreadsTableTestHelper.addThread({
-          id: 'thread-4567890',
-          title: 'new title',
-          body: 'new body',
-          owner: 'user-123',
-          date: '2023'
-        })
-      })
-
-      afterEach(async () => {
-        await ThreadsTableTestHelper.cleanTable()
-      })
-
-      it('should return detail not found', async () => {
-        const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
-        const detailThread = threadRepositoryPostgres.getThreadById('thread-detail-not-found-123')
-
-        await expect(detailThread).rejects.toThrowError('Thread tidak ditemukan')
-      })
-
-      it('should return detail thread correctly', async () => {
-        const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
-        const detailThread = await threadRepositoryPostgres.getThreadById('thread-4567890')
-
-        expect(detailThread).toStrictEqual(new GetDetailThread({
-          id: 'thread-4567890',
-          title: 'new title',
-          body: 'new body',
-          owner: 'user-123',
-          date: '2023',
-          username: 'Gojokun',
-          comments: []
-        }))
-      })
-    })
-
-    describe('verify Thread Avaibaibility Test', () => {
-      beforeEach(async () => {
-        await ThreadsTableTestHelper.addThread({
-          id: 'thread-321',
-          title: 'new title',
-          body: 'new body',
-          owner: 'user-123',
-          date: '2023'
-        })
-      })
+          await ThreadsTableTestHelper.addThread(
+            {
+              id: 'thread-54321',
+              title: 'new title',
+              body: 'new body',
+              owner: 'user-123',
+              date: '2023'
+            }
+          )
+        }
+      )
 
       afterEach(async () => {
         await ThreadsTableTestHelper.cleanTable()
       })
 
       it('should throw NotFoundError when thread not found', async () => {
-        const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
+        const threadRepoPostgres = new ThreadRepositoryPostgres(pool, {})
 
-        await expect(threadRepositoryPostgres.verifyThreadAvailability('thread-not-found-123')).rejects
+        await expect(threadRepoPostgres.verifyThreadExisting('thread-not-found-123')).rejects
           .toThrowError('Thread tidak ditemukan')
       })
 
       it('should resolve if thread exists', async () => {
-        const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {})
+        const threadRepoPostgres = new ThreadRepositoryPostgres(pool, {})
 
-        await expect(threadRepositoryPostgres.verifyThreadAvailability('thread-321')).resolves.toBeUndefined()
+        await expect(threadRepoPostgres.verifyThreadExisting('thread-54321')).toBeDefined()
+        await expect(threadRepoPostgres.verifyThreadExisting('thread-54321')).resolves.toBeUndefined()
+      })
+    })
+
+    describe('get Detail Thread Test', () => {
+      beforeEach(async () => {
+        await ThreadsTableTestHelper.addThread(
+          {
+            id: 'thread-4567890',
+            title: 'new title',
+            body: 'new body',
+            owner: 'user-123',
+            date: '2023'
+          }
+        )
+      })
+
+      afterEach(async () => {
+        await ThreadsTableTestHelper.cleanTable()
+      })
+
+      it('should return detail thread by id not found', async () => {
+        const threadRepoPostgres = new ThreadRepositoryPostgres(pool, {})
+        const detailThreadById = threadRepoPostgres.getThreadById('thread-detail-not-found-123')
+
+        await expect(detailThreadById).rejects.toThrowError('Thread tidak ditemukan')
+      })
+
+      it('should return detail thread by id correctly', async () => {
+        const threadRepoPostgres = new ThreadRepositoryPostgres(pool, {})
+        const detailThreadById = await threadRepoPostgres.getThreadById('thread-4567890')
+
+        const expectedDetailThreadById = new GetDetailThread(
+          {
+            id: 'thread-4567890',
+            title: 'new title',
+            body: 'new body',
+            owner: 'user-123',
+            date: '2023',
+            username: 'Gojokun',
+            comments: []
+          }
+        )
+
+        expect(detailThreadById).toStrictEqual(expectedDetailThreadById)
       })
     })
   })

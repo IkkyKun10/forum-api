@@ -2,19 +2,23 @@ class AddComment {
   constructor (payload) {
     this._verifyPayload(payload)
 
-    const { content, threadId, owner, username } = payload
-    this.content = content
+    const { threadId, username, owner, content } = payload
     this.threadId = threadId
-    this.owner = owner
     this.username = username
+    this.owner = owner
+    this.content = content
   }
 
-  _verifyPayload ({ content, threadId, owner, username }) {
-    if (!content || !threadId || !owner || !username) {
+  _verifyPayload ({ threadId, username, owner, content }) {
+    if (!threadId || !owner || !content || !username) {
       throw new Error('ADD_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')
     }
-    if (typeof content !== 'string' || typeof threadId !== 'string' ||
-      typeof owner !== 'string' || typeof username !== 'string'
+
+    if (
+      typeof threadId !== 'string' ||
+      typeof owner !== 'string' ||
+      typeof content !== 'string' ||
+      typeof username !== 'string'
     ) {
       throw new Error('ADD_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }

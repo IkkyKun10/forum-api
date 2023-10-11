@@ -24,16 +24,19 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const result = await this._pool.query(query)
 
-    return new AddedComment(result.rows[0])
+    const addedComment = new AddedComment(result.rows[0])
+
+    return addedComment
   }
 
-  async verifyComment ({ commentId, owner }) {
+  async verifyCommentIsOwnership ({ commentId, owner }) {
     const query = {
       text: 'SELECT * FROM comments WHERE id = $1 AND owner = $2',
       values: [commentId, owner]
     }
 
     const result = await this._pool.query(query)
+
     if (isEmpty(result.rows)) {
       throw new AuthorizationError('Anda tidak punya akses untuk melakukan aksi ini')
     }
@@ -46,21 +49,35 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
 
     const result = await this._pool.query(query)
+
     if (!result.rowCount) {
       throw new NotFoundError('Comment tidak ditemukan')
     }
   }
 
-  async getAllCommentInThread (threadId) {
+  async getCommentsInThread (threadId) {
     const query = {
-      text: `SELECT c.id, c.content, c.date, u.username, c.is_deleted FROM comments c INNER JOIN users u
-              ON c.owner = u.id WHERE c.thread_id = $1
+      text: `SELECT c.id, u.username, c.content, c.date, c.is_deleted FROM comments c 
+             INNER JOIN users u ON c.owner = u.id WHERE c.thread_id = $1
               ORDER BY c.date ASC`,
       values: [threadId]
     }
 
     const result = await this._pool.query(query)
+
     return result.rows
+  }
+
+  async verifyCommentsExisting (commentId, threadId) {
+    const query = {
+      text: 'SELECT * FROM comments where id = $1 AND thread_id = $2',
+      values: [commentId, threadId]
+    }
+
+    const result = await this._pool.query(query)
+    if (!result.rowCount) {
+      throw new NotFoundError('Comments tidak ditemukan')
+    }
   }
 
   async deleteCommentById (commentId) {

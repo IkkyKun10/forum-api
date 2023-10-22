@@ -11,7 +11,7 @@ describe('Add Thread UseCase Test', () => {
       id: 'thread-123',
       title: 'One piece',
       body: 'Gear 5',
-      owner: userId,
+      owner: userId
     }
 
     const expectedAddThread = new AddThread(payload)

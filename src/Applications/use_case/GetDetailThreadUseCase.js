@@ -11,7 +11,7 @@ class GetDetailThreadUseCase {
 
     const threadDetail = await this._threadRepository.getThreadById(threadId)
 
-    const commentsInThread = await this._commentRepository.getCommentsInThread(threadId)
+    const commentsInThread = await this._commentRepository.getCommentsByThreadId(threadId)
 
     const replies = await this._threadRepository.getRepliesByThreadId(threadId)
 
@@ -23,7 +23,7 @@ class GetDetailThreadUseCase {
             id: replie.id,
             content: replie.is_deleted ? '**balasan telah dihapus**' : replie.content,
             date: replie.date,
-            username: replie.username,
+            username: replie.username
           }))
         }
       )

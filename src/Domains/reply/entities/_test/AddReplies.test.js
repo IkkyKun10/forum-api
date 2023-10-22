@@ -3,7 +3,7 @@ const AddReplies = require('../AddReplies')
 describe('a AddReplies entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
-      owner: 'user-123',
+      owner: 'user-123'
     }
 
     expect(() => new AddReplies(payload)).toThrowError('ADD_REPLIES.NOT_CONTAIN_NEEDED_PROPERTY')
@@ -13,7 +13,7 @@ describe('a AddReplies entities', () => {
     const payload = {
       commentId: 120293844775,
       owner: 'user-123',
-      content: 123333333455,
+      content: 123333333455
     }
 
     expect(() => new AddReplies(payload)).toThrowError('ADD_REPLIES.NOT_MEET_DATA_TYPE_SPECIFICATION')
@@ -23,7 +23,7 @@ describe('a AddReplies entities', () => {
     const payload = {
       commentId: 'comment-123',
       content: 'content',
-      owner: 'user-123',
+      owner: 'user-123'
     }
 
     const { commentId, owner, content } = new AddReplies(payload)

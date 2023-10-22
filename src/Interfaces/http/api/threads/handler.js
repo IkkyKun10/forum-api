@@ -13,7 +13,7 @@ class ThreadsHandler {
 
     const addThreadPayload = {
       ...request.payload,
-      owner,
+      owner
     }
 
     const addedThread = await threadUseCase.addNewThread(addThreadPayload)

@@ -105,7 +105,44 @@ describe('CommentRepositoryPostgres Test', () => {
     })
   })
 
-  describe('verify Comment test', () => {
+  describe('verify comments existing test', () => {
+    beforeEach(async () => {
+      await CommentsTableTestHelper.addComment(
+        {
+          id: 'comment-324567',
+          threadId: 'thread-123',
+          username: 'new user',
+          date: '2023',
+          content: 'new content',
+          isDelete: false,
+          owner: 'user-123'
+        }
+      )
+    })
+
+    afterEach(async () => {
+      await CommentsTableTestHelper.cleanTable()
+    })
+
+    it('should throw not found when comment not exist', async () => {
+      const commentRepoPostgres = new CommentRepositoryPostgres(pool, {})
+
+      await expect(commentRepoPostgres.verifyCommentsExisting('comment-00000000000', 'thead-0000000000000'))
+        .rejects.toThrowError('Comments tidak ditemukan')
+    })
+
+    it('should resolves is comments exist', async () => {
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {})
+
+      await expect(commentRepositoryPostgres.verifyCommentsExisting('comment-324567', 'thread-123'))
+        .resolves.toBeUndefined()
+
+      await expect(commentRepositoryPostgres.verifyCommentsExisting('comment-324567', 'thread-123'))
+        .resolves.not.toThrowError()
+    })
+  })
+
+  describe('verify Comment Ownership test', () => {
     beforeEach(async () => {
       await UsersTableTestHelper.addUser(
         {
@@ -160,7 +197,7 @@ describe('CommentRepositoryPostgres Test', () => {
   })
 
   describe('get All Comment In Thread Test', () => {
-    it('should return all comment in thread correctly', async () => {
+    beforeEach(async () => {
       await CommentsTableTestHelper.addComment(
         {
           id: 'comment-000',
@@ -184,7 +221,13 @@ describe('CommentRepositoryPostgres Test', () => {
           owner: 'user-123'
         }
       )
+    })
 
+    afterEach(async () => {
+      await CommentsTableTestHelper.cleanTable()
+    })
+
+    it('should return all comment in thread correctly', async () => {
       const commentRepoPostgres = new CommentRepositoryPostgres(pool, {})
 
       const expectedComments = [
@@ -204,7 +247,7 @@ describe('CommentRepositoryPostgres Test', () => {
         }
       ]
 
-      const actualComments = await commentRepoPostgres.getCommentsInThread('thread-123')
+      const actualComments = await commentRepoPostgres.getCommentsByThreadId('thread-123')
 
       expect(actualComments).toStrictEqual(expectedComments)
 
@@ -229,7 +272,6 @@ describe('CommentRepositoryPostgres Test', () => {
       expect(actualComments[1].content).toStrictEqual(expectedComments[1].content)
 
       expect(actualComments[1].is_deleted).toStrictEqual(expectedComments[1].is_deleted)
-
     })
   })
 

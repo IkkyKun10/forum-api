@@ -3,7 +3,7 @@ const GetDetailThread = require('../GetDetailThread')
 describe('a Thread entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     const payload = {
-      body: 'new body',
+      body: 'new body'
     }
 
     expect(() => new GetDetailThread(payload))

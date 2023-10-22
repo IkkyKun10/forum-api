@@ -15,7 +15,7 @@ class CommentsHandler {
       threadId,
       username,
       content,
-      owner,
+      owner
     }
 
     const addedComment = await commentUseCase.addComment(addCommentPayload)

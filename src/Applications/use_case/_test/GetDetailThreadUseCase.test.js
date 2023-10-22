@@ -76,7 +76,7 @@ describe('Get Detail Thread UseCase Test', () => {
       }
     ]
 
-    mockCommentsRepo.getCommentsInThread = jest.fn().mockImplementation(
+    mockCommentsRepo.getCommentsByThreadId = jest.fn().mockImplementation(
       () => Promise.resolve(mockCommentsRepoPayload)
     )
 
@@ -84,12 +84,18 @@ describe('Get Detail Thread UseCase Test', () => {
       {
         id: 'replies-123',
         content: 'content',
-        owner: 'user-123'
+        owner: 'user-123',
+        date: '2023-10-01',
+        username: 'full username',
+        is_deleted: true,
       },
       {
         id: 'replies-456',
         content: 'content',
-        owner: 'user-234'
+        owner: 'user-234',
+        date: '2023-10-01',
+        username: 'username other',
+        is_deleted: false,
       }
     ]
 
@@ -111,7 +117,7 @@ describe('Get Detail Thread UseCase Test', () => {
 
     expect(mockThreadRepo.getRepliesByThreadId).toBeCalledWith(threadId)
 
-    expect(mockCommentsRepo.getCommentsInThread).toBeCalledWith(threadId)
+    expect(mockCommentsRepo.getCommentsByThreadId).toBeCalledWith(threadId)
     expect(detailThread).toStrictEqual(expectedDetailThreadById)
   })
 })

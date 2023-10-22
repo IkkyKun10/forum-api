@@ -17,7 +17,11 @@ describe('Delete Comment UseCase Test', () => {
     mockCommentsRepo.getCommentById = jest.fn().mockImplementation(() => Promise.resolve())
 
     mockCommentsRepo.verifyCommentIsOwnership = jest.fn().mockImplementation(() => Promise.resolve())
-    mockCommentsRepo.deleteCommentById = jest.fn().mockImplementation(() => Promise.resolve())
+    mockCommentsRepo.deleteCommentById = jest.fn().mockImplementation(() => Promise.resolve(
+      {
+        id: 'comment-12345'
+      }
+    ))
 
     const deleteCommentUseCase = new DeleteCommentUseCase(
       {
@@ -27,18 +31,21 @@ describe('Delete Comment UseCase Test', () => {
     )
 
     const deletePayload = {
-      payload
+      payload,
     }
 
-    await deleteCommentUseCase.deleteCommentById(deletePayload)
+    const deleteComment = await deleteCommentUseCase.deleteCommentById(deletePayload)
+
+    expect(mockThreadRepo.verifyThreadExisting).toBeCalledWith(deletePayload.threadId)
 
     expect(mockCommentsRepo.getCommentById).toBeCalledWith(deletePayload.commentId)
     expect(mockCommentsRepo.verifyCommentIsOwnership).toBeCalledWith(
       {
         commentId: deletePayload.commentId,
-        owner: deletePayload.owner,
+        owner: deletePayload.owner
       }
     )
+    expect(deleteComment).toStrictEqual({ id: 'comment-12345' })
     expect(mockCommentsRepo.deleteCommentById).toBeCalledWith(deletePayload.commentId)
   })
 })

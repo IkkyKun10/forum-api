@@ -5,6 +5,8 @@ const AddThread = require('../../../Domains/threads/entities/AddThread')
 const AddedThread = require('../../../Domains/threads/entities/AddedThread')
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres')
 const GetDetailThread = require('../../../Domains/threads/entities/GetDetailThread')
+const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper')
+const RepliesTableTestHelper = require('../../../../tests/RepliesTableTestHelper')
 
 describe('Thread Repository Postgres Test', () => {
   beforeAll(async () => {
@@ -21,6 +23,8 @@ describe('Thread Repository Postgres Test', () => {
   afterAll(async () => {
     await UsersTableTestHelper.cleanTable()
     await ThreadsTableTestHelper.cleanTable()
+    await CommentsTableTestHelper.cleanTable()
+    await RepliesTableTestHelper.cleanTable()
     await pool.end()
   })
 
@@ -56,16 +60,16 @@ describe('Thread Repository Postgres Test', () => {
 
     describe('verify Thread existing Test', () => {
       beforeEach(async () => {
-          await ThreadsTableTestHelper.addThread(
-            {
-              id: 'thread-54321',
-              title: 'new title',
-              body: 'new body',
-              owner: 'user-123',
-              date: '2023'
-            }
-          )
-        }
+        await ThreadsTableTestHelper.addThread(
+          {
+            id: 'thread-54321',
+            title: 'new title',
+            body: 'new body',
+            owner: 'user-123',
+            date: '2023'
+          }
+        )
+      }
       )
 
       afterEach(async () => {
@@ -128,6 +132,56 @@ describe('Thread Repository Postgres Test', () => {
         )
 
         expect(detailThreadById).toStrictEqual(expectedDetailThreadById)
+      })
+    })
+
+    describe('getRepliesByThreadId Test', () => {
+      beforeEach(async () => {
+        await ThreadsTableTestHelper.addThread(
+          {
+            id: 'thread-123'
+          }
+        )
+        await CommentsTableTestHelper.addComment(
+          {
+            id: 'comment-123',
+            threadId: 'thread-123'
+          }
+        )
+        await RepliesTableTestHelper.addReplie(
+          {
+            id: 'replies-123',
+            commentId: 'comment-123',
+            content: 'content balasan',
+            owner: 'user-123',
+            date: '2023'
+          }
+        )
+      })
+
+      afterEach(async () => {
+        await ThreadsTableTestHelper.cleanTable()
+        await CommentsTableTestHelper.cleanTable()
+        await RepliesTableTestHelper.cleanTable()
+      })
+
+      it('should return replies correctly', async () => {
+        const threadRepoPostgres = new ThreadRepositoryPostgres(pool, {})
+
+        const replies = await threadRepoPostgres.getRepliesByThreadId('thread-123')
+
+        const expectedReplies = {
+          id: 'replies-123',
+          comment_id: 'comment-123',
+          username: 'Gojokun',
+          date: '2023',
+          content: 'content balasan',
+          owner: 'user-123',
+          is_deleted: false
+        }
+
+        expect(replies).toHaveLength(1)
+        expect(replies[0]).toStrictEqual(expectedReplies)
       })
     })
   })

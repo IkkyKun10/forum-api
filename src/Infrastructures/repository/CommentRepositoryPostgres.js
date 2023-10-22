@@ -1,4 +1,3 @@
-const { isEmpty } = require('lodash')
 const NotFoundError = require('../../Commons/exceptions/NotFoundError')
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError')
 const AddedComment = require('../../Domains/comments/entities/AddedComment')
@@ -37,7 +36,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     const result = await this._pool.query(query)
 
-    if (isEmpty(result.rows)) {
+    if (!result.rowCount) {
       throw new AuthorizationError('Anda tidak punya akses untuk melakukan aksi ini')
     }
   }
@@ -55,7 +54,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
   }
 
-  async getCommentsInThread (threadId) {
+  async getCommentsByThreadId (threadId) {
     const query = {
       text: `SELECT c.id, u.username, c.content, c.date, c.is_deleted FROM comments c 
              INNER JOIN users u ON c.owner = u.id WHERE c.thread_id = $1

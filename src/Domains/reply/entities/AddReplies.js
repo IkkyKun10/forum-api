@@ -10,7 +10,7 @@ class AddReplies {
   }
 
   _verifyPayload (payload) {
-    const { commentId,  owner, content } = payload
+    const { commentId, owner, content } = payload
 
     if (!commentId || !owner || !content) {
       throw new Error('ADD_REPLIES.NOT_CONTAIN_NEEDED_PROPERTY')

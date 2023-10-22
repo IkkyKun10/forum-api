@@ -17,7 +17,7 @@ class RepliesRepositoryPostgres extends RepliesRepository {
 
     const query = {
       text: 'INSERT INTO replies VALUES($1, $2, $3, $4, $5) RETURNING id',
-      values: [id, commentId, owner, content, date],
+      values: [id, commentId, owner, content, date]
     }
 
     const result = await this._pool.query(query)
@@ -39,7 +39,7 @@ class RepliesRepositoryPostgres extends RepliesRepository {
             INNER JOIN comments c ON r.comment_id = c.id
             WHERE r.id = $1 AND r.comment_id = $2
             AND c.thread_id = $3 AND r.is_deleted = false`,
-      values: [replieId, commentId, threadId],
+      values: [replieId, commentId, threadId]
     }
 
     const result = await this._pool.query(query)
@@ -56,7 +56,7 @@ class RepliesRepositoryPostgres extends RepliesRepository {
   async verifyReplieOwner (id, owner) {
     const query = {
       text: 'SELECT 1 FROM replies WHERE id = $1 AND owner = $2',
-      values: [id, owner],
+      values: [id, owner]
     }
 
     const result = await this._pool.query(query)
@@ -73,7 +73,7 @@ class RepliesRepositoryPostgres extends RepliesRepository {
   async deleteReplieById (id) {
     const query = {
       text: 'UPDATE replies SET is_deleted=TRUE WHERE id=$1',
-      values: [id],
+      values: [id]
     }
 
     const result = await this._pool.query(query)

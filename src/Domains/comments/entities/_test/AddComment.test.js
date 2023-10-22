@@ -23,7 +23,7 @@ describe('add Comment entities', () => {
   it('should create Comment object correctly', () => {
     const payload = {
       threadId: 'thread-123',
-      username: 'username_test_correctly',
+      username: 'username_test_absolute_correctly',
       content: 'content',
       owner: 'user-123'
     }

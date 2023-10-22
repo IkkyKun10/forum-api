@@ -20,13 +20,27 @@ describe('a Detail Comment entities', () => {
     expect(() => new GetDetailComment(payload)).toThrowError('GET_DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
   })
 
+  it('should get comment blank when is_deleted', () => {
+    const detailPayload = {
+      id: 'comment-123',
+      username: 'username_test',
+      date: '2023-10-01',
+      is_deleted: true,
+      content: 'new content',
+      replies: []
+    }
+
+    const { content } = new GetDetailComment(detailPayload)
+    expect(content).toEqual('**komentar telah dihapus**')
+  })
+
   it('should get detailComment correctly', () => {
     const detailPayload = {
       id: 'comment-123',
       username: 'username_test',
       date: '2023-10-01',
       content: 'new content',
-      replies: [],
+      replies: []
     }
 
     const { id, date, username, content, replies } = new GetDetailComment(detailPayload)

@@ -16,7 +16,7 @@ describe('Add Comment UseCase Test', () => {
         threadId,
         username,
         content,
-        owner,
+        owner
       }
     )
 
@@ -24,7 +24,7 @@ describe('Add Comment UseCase Test', () => {
       {
         id: 'comment-123',
         content: 'just content',
-        owner: 'user-123',
+        owner: 'user-123'
       }
     )
 
@@ -55,7 +55,7 @@ describe('Add Comment UseCase Test', () => {
         threadId,
         username,
         content,
-        owner,
+        owner
       }
     )
 

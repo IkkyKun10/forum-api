@@ -6,7 +6,7 @@ class RepliesHandler {
     this._container = container
   }
 
-  async addReplieHandler(request, h) {
+  async addReplieHandler (request, h) {
     const { id: owner } = request.auth.credentials
     const { content } = request.payload
     const { threadId, commentId } = request.params
@@ -25,15 +25,15 @@ class RepliesHandler {
     const response = h.response({
       status: 'success',
       data: {
-        addedReply,
-      },
+        addedReply
+      }
     })
 
     response.code(201)
     return response
   }
 
-  async deleteReplieByIdHandler(request, h) {
+  async deleteReplieByIdHandler (request, h) {
     const owner = request.auth.credentials.id
     const { threadId, commentId, replyId } = request.params
 

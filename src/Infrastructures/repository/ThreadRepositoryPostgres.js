@@ -65,9 +65,8 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       text: `SELECT r.*, users.username FROM replies r
             LEFT JOIN comments c ON r.comment_id = c.id
             LEFT JOIN users ON r.owner = users.id
-            WHERE c.thread_id = $1
-            ORDER BY r.date ASC`,
-      values: [threadId],
+            WHERE c.thread_id = $1 ORDER BY r.date ASC`,
+      values: [threadId]
     }
 
     const result = await this._pool.query(query)

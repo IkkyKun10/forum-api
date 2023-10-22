@@ -1,18 +1,21 @@
-const pool = require('../../database/postgres/pool')
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
-const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper')
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper')
+const RepliesTableTestHelper = require('../../../../tests/RepliesTableTestHelper')
+const pool = require('../../database/postgres/pool')
 const container = require('../../container')
 const createServer = require('../createServer')
+const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper')
+
+let accessToken
 let commentId
 let threadId
-let accessToken
+let replyId
 
-describe('/threads/{threadId}/comments endpoint Test', () => {
+describe('/threads/{threadId}/comments/{commentId}/replies/ endpoint Test', () => {
   beforeEach(async () => {
     const payloadLogin = {
-      username: 'saya',
-      password: 'super_secret'
+      username: 'username',
+      password: 'secret'
     }
 
     const server = await createServer(container)
@@ -22,9 +25,9 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
         method: 'POST',
         url: '/users',
         payload: {
-          username: 'saya',
-          password: 'super_secret',
-          fullname: 'saya saya'
+          username: 'username',
+          password: 'secret',
+          fullname: 'full name'
         }
       }
     )
@@ -56,19 +59,36 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
 
     const responseThreadJson = JSON.parse(responseThread.payload)
     threadId = responseThreadJson.data.addedThread.id
+
+    const responseComment = await server.inject(
+      {
+        method: 'POST',
+        url: `/threads/${threadId}/comments`,
+        payload: {
+          content: 'new content'
+        },
+        headers: {
+          authorization: `Bearer ${accessToken}`
+        }
+      }
+    )
+
+    const responseCommentJson = JSON.parse(responseComment.payload)
+    commentId = responseCommentJson.data.addedComment.id
   })
 
   afterEach(async () => {
     await UsersTableTestHelper.cleanTable()
     await ThreadsTableTestHelper.cleanTable()
     await CommentsTableTestHelper.cleanTable()
+    await RepliesTableTestHelper.cleanTable()
   })
 
   afterAll(async () => {
     await pool.end()
   })
 
-  describe('when POST /threads/{threadId}/comments Test', () => {
+  describe('when POST /threads/{threadId}/comments/{commentId}/replies Test', () => {
     it('should response 400 when request payload not contain needed property', async () => {
       const server = await createServer(container)
 
@@ -77,7 +97,7 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
       const response = await server.inject(
         {
           method: 'POST',
-          url: `/threads/${threadId}/comments`,
+          url: `/threads/${threadId}/comments/${commentId}/replies`,
           payload: {
             dataNull
           },
@@ -91,16 +111,16 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
 
-      expect(responseJson.message).toEqual('comment gagal dibuat karena properti yang dibutuhkan tidak ada')
+      expect(responseJson.message).toEqual('replies gagal dibuat karena properti yang dibutuhkan tidak ada')
     })
 
-    it('should response 400 when request payload not meet data type specification', async () => {
+    it('should should response 400 when request payload not meet data type specification', async () => {
       const server = await createServer(container)
 
       const response = await server.inject(
         {
           method: 'POST',
-          url: `/threads/${threadId}/comments`,
+          url: `/threads/${threadId}/comments/${commentId}/replies`,
           payload: {
             content: 1234858567696007
           },
@@ -113,16 +133,16 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(400)
       expect(responseJson.status).toEqual('fail')
-      expect(responseJson.message).toEqual('comment gagal dibuat karena tipe data tidak sesuai')
+      expect(responseJson.message).toEqual('replies gagal dibuat karena tipe data tidak sesuai')
     })
 
-    it('should response 201 and persisted add comment', async () => {
+    it('should response 201 and persisted add replies', async () => {
       const server = await createServer(container)
 
       const response = await server.inject(
         {
           method: 'POST',
-          url: `/threads/${threadId}/comments`,
+          url: `/threads/${threadId}/comments/${commentId}/replies`,
           payload: {
             content: 'new content'
           },
@@ -135,17 +155,18 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
       const responseJson = JSON.parse(response.payload)
       expect(response.statusCode).toEqual(201)
       expect(responseJson.status).toEqual('success')
-      expect(responseJson.data.addedComment).toBeDefined()
+      expect(responseJson.data.addedReply).toBeDefined()
     })
   })
 
-  describe('when DELETE /threads/{threadId}/comments/{commentId} Test', () => {
+  describe('when DELETE /threads/{threadId}/comments/{commentId}/replies/{replyId} Test', () => {
     beforeEach(async () => {
       const server = await createServer(container)
+
       const response = await server.inject(
         {
           method: 'POST',
-          url: `/threads/${threadId}/comments`,
+          url: `/threads/${threadId}/comments/${commentId}/replies`,
           payload: {
             content: 'new content'
           },
@@ -155,11 +176,11 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
         }
       )
 
-      const responseAddCommentJson = JSON.parse(response.payload)
-      commentId = responseAddCommentJson.data.addedComment.id
+      const responseAddReplieJson = JSON.parse(response.payload)
+      replyId = responseAddReplieJson.data.addedReply.id
     })
 
-    it('should respond 403 when user remove not his comment', async () => {
+    it('should respond 403 when user remove not his replies', async () => {
       const server = await createServer(container)
 
       const payloadLogin = {
@@ -193,7 +214,7 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
       const response = await server.inject(
         {
           method: 'DELETE',
-          url: `/threads/${threadId}/comments/${commentId}`,
+          url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
           headers: {
             authorization: `Bearer ${accessTokenAnotherUser}`
           }
@@ -206,13 +227,13 @@ describe('/threads/{threadId}/comments endpoint Test', () => {
       expect(responseJson.message).toBeDefined()
     })
 
-    it('should respond 200 and return success', async () => {
+    it('should response 200 and return success', async () => {
       const server = await createServer(container)
 
       const response = await server.inject(
         {
           method: 'DELETE',
-          url: `/threads/${threadId}/comments/${commentId}`,
+          url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
           headers: {
             authorization: `Bearer ${accessToken}`
           }

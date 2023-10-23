@@ -15,7 +15,14 @@ describe('Get Detail Thread UseCase Test', () => {
           content: 'test-content',
           date: '2023-10-01',
           username: 'New User',
-          replies: []
+          replies: [
+            {
+              id: 'replies-123',
+              content: '**balasan telah dihapus**',
+              date: '2023-10-01',
+              username: 'full username',
+            },
+          ]
         }
       ),
       new GetDetailComment(
@@ -24,7 +31,14 @@ describe('Get Detail Thread UseCase Test', () => {
           content: '**komentar telah dihapus**',
           date: '2023-10-01',
           username: 'User New',
-          replies: []
+          replies: [
+            {
+              id: 'replies-456',
+              content: 'content',
+              date: '2023-10-01',
+              username: 'username other',
+            }
+          ]
         }
       )
     ]
@@ -88,6 +102,7 @@ describe('Get Detail Thread UseCase Test', () => {
         date: '2023-10-01',
         username: 'full username',
         is_deleted: true,
+        comment_id: 'comment-123'
       },
       {
         id: 'replies-456',
@@ -96,6 +111,7 @@ describe('Get Detail Thread UseCase Test', () => {
         date: '2023-10-01',
         username: 'username other',
         is_deleted: false,
+        comment_id: 'comment-456',
       }
     ]
 
@@ -119,5 +135,81 @@ describe('Get Detail Thread UseCase Test', () => {
 
     expect(mockCommentsRepo.getCommentsByThreadId).toBeCalledWith(threadId)
     expect(detailThread).toStrictEqual(expectedDetailThreadById)
+  })
+
+  it('should not showing delete object', async () => {
+    const threadId = 'thread-123'
+
+    const threadByIdPayloadExpect = {
+      id: 'thread-123',
+      title: 'New Title',
+      body: 'New Body',
+      date: '2023-11-11',
+      username: 'New User',
+    }
+
+    const commentsExpect = [
+      {
+        id: 'comment-123',
+        content: '**komentar telah dihapus**',
+        date: '2023-10-01',
+        username: 'New User',
+        is_deleted: true,
+      }
+    ]
+
+    const repliesExpect = [
+      {
+        id: 'replies-123',
+        content: '**balasan telah dihapus**',
+        date: '2023-10-01',
+        username: 'full username',
+        is_deleted: true,
+        comment_id: 'comment-123'
+      }
+    ]
+
+    const commentsMapping = commentsExpect.map(({ is_deleted: commentDeleted, ...otherObject }) => otherObject)
+    const repliesMapping = repliesExpect.map(({ comment_id, is_deleted, ...otherObject }) => otherObject)
+
+    const commentsRepliesExpected = [
+      new GetDetailComment(
+        {
+          ...commentsMapping[0],
+          replies: repliesMapping
+        }
+      )
+    ]
+
+    const mockThreadRepo = new ThreadRepository()
+    const mockCommentsRepo = new CommentRepository()
+
+    mockThreadRepo.verifyThreadExisting = jest.fn(() => Promise.resolve())
+    mockThreadRepo.getThreadById = jest.fn().mockImplementation(() => Promise.resolve(
+      threadByIdPayloadExpect
+    ))
+    mockCommentsRepo.getCommentsByThreadId = jest.fn().mockImplementation(
+      () => Promise.resolve(commentsExpect)
+    )
+    mockThreadRepo.getRepliesByThreadId = jest.fn().mockImplementation(
+      () => Promise.resolve(repliesExpect)
+    )
+
+    const dummyThreadUseCase = new GetDetailThreadUseCase(
+      {
+        threadRepository: mockThreadRepo,
+        commentRepository: mockCommentsRepo
+      }
+    )
+
+    const detailThread = await dummyThreadUseCase.getThreadById(threadId)
+
+    const expectedDetailThread =
+      {
+        ...threadByIdPayloadExpect,
+        comments: commentsRepliesExpected
+      }
+
+    expect(detailThread).toStrictEqual(expectedDetailThread)
   })
 })

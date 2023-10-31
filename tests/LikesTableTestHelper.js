@@ -24,7 +24,7 @@ const LikesTableTestHelper = {
     }
 
     const { rows } = await pool.query(query)
-    return rows
+    return rows[0]
   },
 
   async cleanTable() {

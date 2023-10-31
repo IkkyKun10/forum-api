@@ -1,9 +1,10 @@
 const GetDetailComment = require('../../Domains/comments/entities/GetDetailComment')
 
 class GetDetailThreadUseCase {
-  constructor ({ threadRepository, commentRepository }) {
+  constructor ({ threadRepository, commentRepository, likesRepository }) {
     this._threadRepository = threadRepository
     this._commentRepository = commentRepository
+    this._likesRepository = likesRepository
   }
 
   async getThreadById (threadId) {
@@ -16,6 +17,7 @@ class GetDetailThreadUseCase {
     const replies = await this._threadRepository.getRepliesByThreadId(threadId)
 
     const comments = await Promise.all(commentsInThread.map(async (comment) => {
+      const totalLikes = await this._likesRepository.getTotalLikeComment(comment.id)
       return new GetDetailComment(
         {
           ...comment,
@@ -24,7 +26,8 @@ class GetDetailThreadUseCase {
             content: replie.is_deleted ? '**balasan telah dihapus**' : replie.content,
             date: replie.date,
             username: replie.username
-          }))
+          })),
+          likeCount: totalLikes.length,
         }
       )
     }))

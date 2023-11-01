@@ -3,6 +3,7 @@ const GetDetailComment = require('../../../Domains/comments/entities/GetDetailCo
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
 const CommentRepository = require('../../../Domains/comments/CommentRepository')
 const GetDetailThreadUseCase = require('../GetDetailThreadUseCase')
+const LikesRepository = require('../../../Domains/likes/LikesRepository')
 
 describe('Get Detail Thread UseCase Test', () => {
   it('should orchestrate to get detail thread action correctly', async () => {
@@ -22,7 +23,8 @@ describe('Get Detail Thread UseCase Test', () => {
               date: '2023-10-01',
               username: 'full username',
             },
-          ]
+          ],
+          likeCount: 2,
         }
       ),
       new GetDetailComment(
@@ -38,7 +40,8 @@ describe('Get Detail Thread UseCase Test', () => {
               date: '2023-10-01',
               username: 'username other',
             }
-          ]
+          ],
+          likeCount: 2,
         }
       )
     ]
@@ -56,6 +59,7 @@ describe('Get Detail Thread UseCase Test', () => {
 
     const mockThreadRepo = new ThreadRepository()
     const mockCommentsRepo = new CommentRepository()
+    const mockLikeRepository = new LikesRepository()
 
     const mockDetailThreadByIdRepoPayload = {
       id: 'thread-123',
@@ -78,7 +82,8 @@ describe('Get Detail Thread UseCase Test', () => {
         date: '2023-10-01',
         username: 'New User',
         is_deleted: false,
-        replies: []
+        replies: [],
+        likeCount: 2
       },
       {
         id: 'comment-456',
@@ -86,7 +91,8 @@ describe('Get Detail Thread UseCase Test', () => {
         date: '2023-10-01',
         username: 'User New',
         is_deleted: true,
-        replies: []
+        replies: [],
+        likeCount: 2
       }
     ]
 
@@ -119,10 +125,28 @@ describe('Get Detail Thread UseCase Test', () => {
       () => Promise.resolve(mockRepliesRepoPayload)
     )
 
+    const mockLikesRepoPayload = [
+      {
+        id: 'likes-123',
+        comment_id: 'comment-123',
+        owner: 'user-234',
+      },
+      {
+        id: 'likes-456',
+        comment_id: 'comment-456',
+        owner: 'user-123',
+      }
+    ]
+
+    mockLikeRepository.getTotalLikeComment = jest.fn().mockImplementation(
+      () => Promise.resolve(mockLikesRepoPayload)
+    )
+
     const dummyThreadUseCase = new GetDetailThreadUseCase(
       {
         threadRepository: mockThreadRepo,
-        commentRepository: mockCommentsRepo
+        commentRepository: mockCommentsRepo,
+        likesRepository: mockLikeRepository,
       }
     )
 
@@ -158,6 +182,15 @@ describe('Get Detail Thread UseCase Test', () => {
       }
     ]
 
+    const likesCountExpect = [
+      {
+        comment_id: 'comment-123',
+      },
+      {
+        comment_id: 'comment-123'
+      }
+    ]
+
     const repliesExpect = [
       {
         id: 'replies-123',
@@ -171,18 +204,21 @@ describe('Get Detail Thread UseCase Test', () => {
 
     const commentsMapping = commentsExpect.map(({ is_deleted: commentDeleted, ...otherObject }) => otherObject)
     const repliesMapping = repliesExpect.map(({ comment_id, is_deleted, ...otherObject }) => otherObject)
+    const likesMapping = likesCountExpect.map(({ comment_id }) => comment_id);
 
     const commentsRepliesExpected = [
       new GetDetailComment(
         {
           ...commentsMapping[0],
-          replies: repliesMapping
+          replies: repliesMapping,
+          likeCount: likesMapping.length
         }
       )
     ]
 
     const mockThreadRepo = new ThreadRepository()
     const mockCommentsRepo = new CommentRepository()
+    const mockLikeRepository = new LikesRepository()
 
     mockThreadRepo.verifyThreadExisting = jest.fn(() => Promise.resolve())
     mockThreadRepo.getThreadById = jest.fn().mockImplementation(() => Promise.resolve(
@@ -194,11 +230,15 @@ describe('Get Detail Thread UseCase Test', () => {
     mockThreadRepo.getRepliesByThreadId = jest.fn().mockImplementation(
       () => Promise.resolve(repliesExpect)
     )
+    mockLikeRepository.getTotalLikeComment = jest.fn().mockImplementation(
+      () => Promise.resolve(likesCountExpect)
+    )
 
     const dummyThreadUseCase = new GetDetailThreadUseCase(
       {
         threadRepository: mockThreadRepo,
-        commentRepository: mockCommentsRepo
+        commentRepository: mockCommentsRepo,
+        likesRepository: mockLikeRepository,
       }
     )
 

@@ -15,7 +15,8 @@ describe('a Detail Comment entities', () => {
       username: Array,
       date: '2023-10-01',
       content: 101010010,
-      replies: Array
+      replies: Array,
+      likeCount: 'integer',
     }
     expect(() => new GetDetailComment(payload)).toThrowError('GET_DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
   })
@@ -27,7 +28,8 @@ describe('a Detail Comment entities', () => {
       date: '2023-10-01',
       is_deleted: true,
       content: 'new content',
-      replies: []
+      replies: [],
+      likeCount: 0,
     }
 
     const actual = new GetDetailComment(detailPayload)
@@ -38,6 +40,7 @@ describe('a Detail Comment entities', () => {
       date: '2023-10-01',
       content: '**komentar telah dihapus**',
       replies: [],
+      likeCount: 0,
     }
 
     expect(actual).toEqual(expected)
@@ -49,15 +52,17 @@ describe('a Detail Comment entities', () => {
       username: 'username_test',
       date: '2023-10-01',
       content: 'new content',
-      replies: []
+      replies: [],
+      likeCount: 2,
     }
 
-    const { id, date, username, content, replies } = new GetDetailComment(detailPayload)
+    const { id, date, username, content, replies, likeCount } = new GetDetailComment(detailPayload)
 
     expect(id).toEqual(detailPayload.id)
     expect(username).toEqual(detailPayload.username)
     expect(date).toEqual(detailPayload.date)
     expect(content).toEqual(detailPayload.content)
     expect(replies).toEqual(detailPayload.replies)
+    expect(likeCount).toEqual(detailPayload.likeCount)
   })
 })

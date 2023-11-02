@@ -5,7 +5,6 @@ const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper
 const createServer = require('../createServer')
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper')
 const LikesTableTestHelper = require('../../../../tests/LikesTableTestHelper')
-const { server } = require('@hapi/hapi')
 
 let accessToken
 let owner
@@ -194,12 +193,6 @@ describe('/threads/{threadId}/comments/{commentId} test', () => {
 
       const responseJson = JSON.parse(responseLike.payload)
 
-      const getLikeById = await LikesTableTestHelper.getLikeById(
-        {
-          commentId,
-          owner
-        }
-      )
 
       expect(responseLike.statusCode).toEqual(200)
       expect(responseJson.status).toEqual('success')

@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const pool = require('../../database/postgres/pool')
 const RepliesRepositoryPostgres = require('../RepliesRepositoryPostgres')
 

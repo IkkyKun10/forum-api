@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const GetDetailComment = require('../GetDetailComment')
 
 describe('a Detail Comment entities', () => {
@@ -16,7 +18,7 @@ describe('a Detail Comment entities', () => {
       date: '2023-10-01',
       content: 101010010,
       replies: Array,
-      likeCount: 'integer',
+      likeCount: 'integer'
     }
     expect(() => new GetDetailComment(payload)).toThrowError('GET_DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
   })
@@ -29,7 +31,7 @@ describe('a Detail Comment entities', () => {
       is_deleted: true,
       content: 'new content',
       replies: [],
-      likeCount: 0,
+      likeCount: 0
     }
 
     const actual = new GetDetailComment(detailPayload)
@@ -40,7 +42,7 @@ describe('a Detail Comment entities', () => {
       date: '2023-10-01',
       content: '**komentar telah dihapus**',
       replies: [],
-      likeCount: 0,
+      likeCount: 0
     }
 
     expect(actual).toEqual(expected)
@@ -53,7 +55,7 @@ describe('a Detail Comment entities', () => {
       date: '2023-10-01',
       content: 'new content',
       replies: [],
-      likeCount: 2,
+      likeCount: 2
     }
 
     const { id, date, username, content, replies, likeCount } = new GetDetailComment(detailPayload)

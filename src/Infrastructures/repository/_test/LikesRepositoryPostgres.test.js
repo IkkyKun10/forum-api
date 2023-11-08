@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const LikesTableTestHelper = require('../../../../tests/LikesTableTestHelper')
 const LikesRepositoryPostgres = require('../LikesRepositoryPostgres')
 const pool = require('../../database/postgres/pool')
@@ -12,7 +14,7 @@ describe('LikesRepositoryPostgres Test', () => {
         id: 'user-123',
         username: 'username',
         password: 'secret',
-        fullname: 'full name',
+        fullname: 'full name'
       }
     )
 
@@ -22,7 +24,7 @@ describe('LikesRepositoryPostgres Test', () => {
         title: 'new thread',
         owner: 'user-123',
         date: '2023',
-        body: 'naruto naruto naruto',
+        body: 'naruto naruto naruto'
       }
     )
 
@@ -33,10 +35,9 @@ describe('LikesRepositoryPostgres Test', () => {
         owner: 'user-123',
         username: 'username',
         date: '2023',
-        content: 'new comment',
+        content: 'new comment'
       }
     )
-
   })
 
   afterAll(async () => [
@@ -56,7 +57,7 @@ describe('LikesRepositoryPostgres Test', () => {
         {
           id: 'likes-123',
           commentId: 'comment-123',
-          owner: 'user-123',
+          owner: 'user-123'
         }
       )
 
@@ -80,13 +81,13 @@ describe('LikesRepositoryPostgres Test', () => {
           owner: 'user-123',
           username: 'username',
           date: '2023',
-          content: 'new content',
+          content: 'new content'
         }
       )
 
       const payload = {
         commentId: 'comment-1111111',
-        owner: 'user-123',
+        owner: 'user-123'
       }
 
       const likesRepoPostgres = new LikesRepositoryPostgres(pool, {})
@@ -101,7 +102,7 @@ describe('LikesRepositoryPostgres Test', () => {
     it('should add like to comment', async () => {
       const payload = {
         commentId: 'comment-123',
-        owner: 'user-123',
+        owner: 'user-123'
       }
 
       const fakeIdGen = () => '123'
@@ -118,13 +119,13 @@ describe('LikesRepositoryPostgres Test', () => {
         {
           id: 'likes-123',
           commentId: 'comment-123',
-          owner: 'user-123',
+          owner: 'user-123'
         }
       )
 
       const payload = {
         commentId: 'comment-123',
-        owner: 'owner-123',
+        owner: 'owner-123'
       }
 
       const likesRepoPostgres = new LikesRepositoryPostgres(pool, {})
@@ -142,7 +143,7 @@ describe('LikesRepositoryPostgres Test', () => {
           id: 'user-000',
           username: 'other user',
           password: 'secret',
-          fullname: 'full other user',
+          fullname: 'full other user'
         }
       )
 
@@ -150,7 +151,7 @@ describe('LikesRepositoryPostgres Test', () => {
         {
           id: 'likes-123',
           commentId: 'comment-123',
-          owner: 'user-123',
+          owner: 'user-123'
         }
       )
 
@@ -158,7 +159,7 @@ describe('LikesRepositoryPostgres Test', () => {
         {
           id: 'likes-234',
           commentId: 'comment-123',
-          owner: 'user-000',
+          owner: 'user-000'
         }
       )
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const NotFoundError = require('../NotFoundError')
 const ClientError = require('../ClientError')
 

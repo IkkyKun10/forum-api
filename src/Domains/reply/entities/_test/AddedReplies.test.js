@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const AddedReplies = require('../AddedReplies')
 
 describe('a AddedReplies entities', () => {

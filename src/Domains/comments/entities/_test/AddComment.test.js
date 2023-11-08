@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const AddComment = require('../AddComment')
 
 describe('add Comment entities', () => {

@@ -5,12 +5,12 @@ const LikesTableTestHelper = {
     {
       id = 'likes-111',
       commentId = 'comment-222',
-      owner = 'user-333',
+      owner = 'user-333'
     }
   ) {
     const query = {
       text: 'INSERT INTO likes VALUES($1, $2, $3)',
-      values: [id, commentId, owner],
+      values: [id, commentId, owner]
     }
 
     await pool.query(query)
@@ -20,14 +20,14 @@ const LikesTableTestHelper = {
     const { commentId, owner } = payload
     const query = {
       text: 'SELECT * FROM likes WHERE comment_id = $1 AND owner = $2',
-      values: [commentId, owner],
+      values: [commentId, owner]
     }
 
     const { rows } = await pool.query(query)
     return rows[0]
   },
 
-  async cleanTable() {
+  async cleanTable () {
     await pool.query('DELETE FROM likes WHERE 1=1')
   }
 }

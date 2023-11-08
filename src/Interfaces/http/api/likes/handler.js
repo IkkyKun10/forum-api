@@ -20,7 +20,7 @@ class LikesHandler {
     await likeUnlikeUseCase.addRemoveLikeUseCase(likeUnlikePayload)
 
     const response = h.response({
-      status: 'success',
+      status: 'success'
     })
     response.code(200)
 

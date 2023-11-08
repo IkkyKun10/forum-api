@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const LikeUnlikeUseCase = require('../LikeUnlikeUseCase')
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
 const CommentRepository = require('../../../Domains/comments/CommentRepository')
@@ -17,7 +19,7 @@ describe('LikeUnlikeUseCase Test', () => {
     const payload = {
       threadId: Array,
       commentId: 100101010101,
-      owner: 'user-222',
+      owner: 'user-222'
     }
 
     const likeUnlikeUseCase = new LikeUnlikeUseCase({})
@@ -29,7 +31,7 @@ describe('LikeUnlikeUseCase Test', () => {
     const payload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
-      owner: 'user-123',
+      owner: 'user-123'
     }
 
     const mockThreadRepo = new ThreadRepository()
@@ -45,7 +47,7 @@ describe('LikeUnlikeUseCase Test', () => {
       {
         commentRepository: mockCommentRepo,
         threadRepository: mockThreadRepo,
-        likesRepository: mockLikesRepo,
+        likesRepository: mockLikesRepo
       }
     )
 
@@ -62,7 +64,7 @@ describe('LikeUnlikeUseCase Test', () => {
     const payload = {
       threadId: 'thread-123',
       commentId: 'comment-123',
-      owner: 'user-123',
+      owner: 'user-123'
     }
 
     const mockThreadRepo = new ThreadRepository()
@@ -78,7 +80,7 @@ describe('LikeUnlikeUseCase Test', () => {
       {
         commentRepository: mockCommentRepo,
         threadRepository: mockThreadRepo,
-        likesRepository: mockLikesRepo,
+        likesRepository: mockLikesRepo
       }
     )
 

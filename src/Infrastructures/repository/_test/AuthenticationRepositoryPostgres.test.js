@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const InvariantError = require('../../../Commons/exceptions/InvariantError')
 const AuthenticationsTableTestHelper = require('../../../../tests/AuthenticationsTableTestHelper')
 const pool = require('../../database/postgres/pool')

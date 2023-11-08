@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const AuthenticationRepository = require('../../../Domains/authentications/AuthenticationRepository')
 const DeleteAuthenticationUseCase = require('../DeleteAuthenticationUseCase')
 

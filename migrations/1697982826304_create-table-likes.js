@@ -4,15 +4,15 @@ exports.up = pgm => {
   pgm.createTable('likes', {
     id: {
       type: 'VARCHAR(50)',
-      primaryKey: true,
+      primaryKey: true
     },
     comment_id: {
       type: 'VARCHAR(50)',
-      notNull: true,
+      notNull: true
     },
     owner: {
       type: 'VARCHAR(50)',
-      notNull: true,
+      notNull: true
     }
   })
 

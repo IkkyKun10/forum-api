@@ -19,7 +19,6 @@ const RepliesRepositoryPostgres = require('./repository/RepliesRepositoryPostgre
 const LikesRepository = require('../Domains/likes/LikesRepository')
 const LikesRepositoryPostgres = require('./repository/LikesRepositoryPostgres')
 
-
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase')
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager')

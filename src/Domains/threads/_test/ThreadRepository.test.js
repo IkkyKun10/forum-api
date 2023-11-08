@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const ThreadRepository = require('../ThreadRepository')
 
 describe('Thread Repository interface Test', () => {

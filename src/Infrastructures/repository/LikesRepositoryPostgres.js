@@ -13,7 +13,7 @@ class LikesRepositoryPostgres extends LikesRepository {
 
     const query = {
       text: 'INSERT INTO likes VALUES($1, $2, $3) RETURNING id',
-      values: [id, commentId, owner],
+      values: [id, commentId, owner]
     }
 
     const { rowCount } = await this._pool.query(query)
@@ -26,7 +26,7 @@ class LikesRepositoryPostgres extends LikesRepository {
 
     const query = {
       text: 'SELECT 1 FROM likes WHERE comment_id = $1 AND owner = $2',
-      values: [commentId, owner],
+      values: [commentId, owner]
     }
 
     const result = await this._pool.query(query)
@@ -37,7 +37,7 @@ class LikesRepositoryPostgres extends LikesRepository {
   async getTotalLikeComment (commentId) {
     const query = {
       text: 'SELECT * FROM likes WHERE comment_id = $1',
-      values: [commentId],
+      values: [commentId]
     }
 
     const { rows } = await this._pool.query(query)
@@ -50,7 +50,7 @@ class LikesRepositoryPostgres extends LikesRepository {
 
     const query = {
       text: 'DELETE FROM likes WHERE comment_id = $1 AND owner = $2',
-      values: [commentId, owner],
+      values: [commentId, owner]
     }
 
     const result = await this._pool.query(query)

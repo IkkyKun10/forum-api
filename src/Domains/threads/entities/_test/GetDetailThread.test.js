@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const GetDetailThread = require('../GetDetailThread')
 
 describe('a Thread entities', () => {

@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper')
 const RepliesTableTestHelper = require('../../../../tests/RepliesTableTestHelper')

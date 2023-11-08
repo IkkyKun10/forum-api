@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const AddReplies = require('../../../Domains/reply/entities/AddReplies')
 const AddedReplies = require('../../../Domains/reply/entities/AddedReplies')
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository')

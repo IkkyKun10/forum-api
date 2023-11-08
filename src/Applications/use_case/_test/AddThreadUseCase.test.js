@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const AddThread = require('../../../Domains/threads/entities/AddThread')
 const AddedThread = require('../../../Domains/threads/entities/AddedThread')
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository')

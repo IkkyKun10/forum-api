@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const DomainErrorTranslator = require('../DomainErrorTranslator')
 const InvariantError = require('../InvariantError')
 

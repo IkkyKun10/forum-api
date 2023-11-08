@@ -1,5 +1,4 @@
 class LikeUnlikeUseCase {
-
   constructor ({ commentRepository, threadRepository, likesRepository }) {
     this._commentRepository = commentRepository
     this._threadRepository = threadRepository
@@ -28,9 +27,9 @@ class LikeUnlikeUseCase {
       throw new Error('ADD_LIKE.NOT_CONTAIN_NEEDED_PROPERTY')
     }
     if (
-      typeof threadId !== 'string'
-      || typeof commentId !== 'string'
-      || typeof owner !== 'string'
+      typeof threadId !== 'string' ||
+      typeof commentId !== 'string' ||
+      typeof owner !== 'string'
     ) {
       throw new Error('ADD_LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION')
     }

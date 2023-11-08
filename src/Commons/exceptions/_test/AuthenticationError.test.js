@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const AuthenticationError = require('../AuthenticationError')
 const ClientError = require('../ClientError')
 

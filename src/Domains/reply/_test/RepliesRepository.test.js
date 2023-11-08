@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const RepliesRepository = require('../RepliesRepository')
 
 describe('a ReplyRepository interface', () => {

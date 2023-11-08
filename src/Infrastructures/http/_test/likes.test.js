@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const pool = require('../../database/postgres/pool')
 const container = require('../../container')
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
@@ -97,7 +99,7 @@ describe('/threads/{threadId}/comments/{commentId} test', () => {
 
       const responseLikes = await server.inject({
         method: 'PUT',
-        url: `/threads/${threadId}/comments/${commentId}/likes`,
+        url: `/threads/${threadId}/comments/${commentId}/likes`
       })
 
       const responseJson = JSON.parse(responseLikes.payload)
@@ -114,8 +116,8 @@ describe('/threads/{threadId}/comments/{commentId} test', () => {
         method: 'PUT',
         url: `/threads/${threadIdNew}/comments/${commentId}/likes`,
         headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
+          authorization: `Bearer ${accessToken}`
+        }
       })
       const responseJson = JSON.parse(responseLikes.payload)
 
@@ -132,8 +134,8 @@ describe('/threads/{threadId}/comments/{commentId} test', () => {
         method: 'PUT',
         url: `/threads/${threadId}/comments/${commentIdFake}/likes`,
         headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
+          authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(responseLikes.payload)
@@ -151,7 +153,7 @@ describe('/threads/{threadId}/comments/{commentId} test', () => {
           method: 'PUT',
           url: `/threads/${threadId}/comments/${commentId}/likes`,
           headers: {
-            authorization: `Bearer ${accessToken}`,
+            authorization: `Bearer ${accessToken}`
           }
         }
       )
@@ -179,20 +181,19 @@ describe('/threads/{threadId}/comments/{commentId} test', () => {
         method: 'PUT',
         url: `/threads/${threadId}/comments/${commentId}/likes`,
         headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
+          authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseLike = await server.inject({
         method: 'PUT',
         url: `/threads/${threadId}/comments/${commentId}/likes`,
         headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
+          authorization: `Bearer ${accessToken}`
+        }
       })
 
       const responseJson = JSON.parse(responseLike.payload)
-
 
       expect(responseLike.statusCode).toEqual(200)
       expect(responseJson.status).toEqual('success')

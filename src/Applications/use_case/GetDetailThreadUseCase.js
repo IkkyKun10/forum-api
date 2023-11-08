@@ -27,7 +27,7 @@ class GetDetailThreadUseCase {
             date: replie.date,
             username: replie.username
           })),
-          likeCount: totalLikes.length,
+          likeCount: totalLikes.length
         }
       )
     }))

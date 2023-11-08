@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
 const InvariantError = require('../../../Commons/exceptions/InvariantError')
 const RegisterUser = require('../../../Domains/users/entities/RegisterUser')

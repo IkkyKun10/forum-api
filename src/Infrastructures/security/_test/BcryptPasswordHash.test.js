@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const bcrypt = require('bcrypt')
 const AuthenticationError = require('../../../Commons/exceptions/AuthenticationError')
 const BcryptEncryptionHelper = require('../BcryptPasswordHash')

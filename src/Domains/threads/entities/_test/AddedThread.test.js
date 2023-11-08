@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const AddedThread = require('../AddedThread')
 
 describe('a AddedThread entities', () => {

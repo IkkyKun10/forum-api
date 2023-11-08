@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const UserLogin = require('../UserLogin')
 
 describe('UserLogin entities', () => {

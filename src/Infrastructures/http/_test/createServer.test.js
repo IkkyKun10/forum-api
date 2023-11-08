@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const createServer = require('../createServer')
 
 describe('HTTP server', () => {
@@ -40,16 +42,16 @@ describe('HTTP server', () => {
 
   describe('when GET / Test', () => {
     it('should return 200 when get hello world', async () => {
-      const server = await createServer({});
+      const server = await createServer({})
 
       const response = await server.inject({
         method: 'GET',
-        url: '/',
-      });
+        url: '/'
+      })
 
-      const responseJson = JSON.parse(response.payload);
-      expect(response.statusCode).toEqual(200);
-      expect(responseJson.value).toEqual('Hello world!');
-    });
-  });
+      const responseJson = JSON.parse(response.payload)
+      expect(response.statusCode).toEqual(200)
+      expect(responseJson.value).toEqual('Hello world!')
+    })
+  })
 })

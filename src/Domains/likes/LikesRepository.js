@@ -1,17 +1,17 @@
 class LikesRepository {
-  async verifyLikeComment(payload) {
+  async verifyLikeComment (payload) {
     throw new Error('LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
-  async addLikeComment(payload) {
+  async addLikeComment (payload) {
     throw new Error('LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
-  async unlikeComment(payload) {
+  async unlikeComment (payload) {
     throw new Error('LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 
-  async getTotalLikeComment(commentId) {
+  async getTotalLikeComment (commentId) {
     throw new Error('LIKE_REPOSITORY.METHOD_NOT_IMPLEMENTED')
   }
 }

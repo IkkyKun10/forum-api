@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const RegisteredUser = require('../RegisteredUser')
 
 describe('a RegisteredUser entities', () => {

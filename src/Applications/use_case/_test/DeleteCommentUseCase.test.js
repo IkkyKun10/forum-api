@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const CommentRepository = require('../../../Domains/comments/CommentRepository')
 const DeleteCommentUseCase = require('../DeleteCommentUseCase')
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
@@ -31,7 +33,7 @@ describe('Delete Comment UseCase Test', () => {
     )
 
     const deletePayload = {
-      payload,
+      payload
     }
 
     const deleteComment = await deleteCommentUseCase.deleteCommentById(deletePayload)

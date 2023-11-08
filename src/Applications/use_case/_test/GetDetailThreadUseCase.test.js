@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable camelcase */
 const GetDetailThread = require('../../../Domains/threads/entities/GetDetailThread')
 const GetDetailComment = require('../../../Domains/comments/entities/GetDetailComment')
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
@@ -21,10 +23,10 @@ describe('Get Detail Thread UseCase Test', () => {
               id: 'replies-123',
               content: '**balasan telah dihapus**',
               date: '2023-10-01',
-              username: 'full username',
-            },
+              username: 'full username'
+            }
           ],
-          likeCount: 2,
+          likeCount: 2
         }
       ),
       new GetDetailComment(
@@ -38,10 +40,10 @@ describe('Get Detail Thread UseCase Test', () => {
               id: 'replies-456',
               content: 'content',
               date: '2023-10-01',
-              username: 'username other',
+              username: 'username other'
             }
           ],
-          likeCount: 2,
+          likeCount: 2
         }
       )
     ]
@@ -117,10 +119,11 @@ describe('Get Detail Thread UseCase Test', () => {
         date: '2023-10-01',
         username: 'username other',
         is_deleted: false,
-        comment_id: 'comment-456',
+        comment_id: 'comment-456'
       }
     ]
 
+    // eslint-disable-next-line no-undef
     mockThreadRepo.getRepliesByThreadId = jest.fn().mockImplementation(
       () => Promise.resolve(mockRepliesRepoPayload)
     )
@@ -129,12 +132,12 @@ describe('Get Detail Thread UseCase Test', () => {
       {
         id: 'likes-123',
         comment_id: 'comment-123',
-        owner: 'user-234',
+        owner: 'user-234'
       },
       {
         id: 'likes-456',
         comment_id: 'comment-456',
-        owner: 'user-123',
+        owner: 'user-123'
       }
     ]
 
@@ -146,7 +149,7 @@ describe('Get Detail Thread UseCase Test', () => {
       {
         threadRepository: mockThreadRepo,
         commentRepository: mockCommentsRepo,
-        likesRepository: mockLikeRepository,
+        likesRepository: mockLikeRepository
       }
     )
 
@@ -169,7 +172,7 @@ describe('Get Detail Thread UseCase Test', () => {
       title: 'New Title',
       body: 'New Body',
       date: '2023-11-11',
-      username: 'New User',
+      username: 'New User'
     }
 
     const commentsExpect = [
@@ -178,13 +181,13 @@ describe('Get Detail Thread UseCase Test', () => {
         content: '**komentar telah dihapus**',
         date: '2023-10-01',
         username: 'New User',
-        is_deleted: true,
+        is_deleted: true
       }
     ]
 
     const likesCountExpect = [
       {
-        comment_id: 'comment-123',
+        comment_id: 'comment-123'
       },
       {
         comment_id: 'comment-123'
@@ -204,7 +207,7 @@ describe('Get Detail Thread UseCase Test', () => {
 
     const commentsMapping = commentsExpect.map(({ is_deleted: commentDeleted, ...otherObject }) => otherObject)
     const repliesMapping = repliesExpect.map(({ comment_id, is_deleted, ...otherObject }) => otherObject)
-    const likesMapping = likesCountExpect.map(({ comment_id }) => comment_id);
+    const likesMapping = likesCountExpect.map(({ comment_id }) => comment_id)
 
     const commentsRepliesExpected = [
       new GetDetailComment(
@@ -238,7 +241,7 @@ describe('Get Detail Thread UseCase Test', () => {
       {
         threadRepository: mockThreadRepo,
         commentRepository: mockCommentsRepo,
-        likesRepository: mockLikeRepository,
+        likesRepository: mockLikeRepository
       }
     )
 
